@@ -1,0 +1,79 @@
+---
+title: Bloqueo de Teclas (KeyDisabled)
+description: Aprende a deshabilitar teclas específicas del teclado (como F5 o F3) en los jugadores durante tu evento.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Este módulo sirve para **bloquear teclas del teclado** de los jugadores de forma remota mientras están conectados a tu servidor.
+
+---
+
+## ¿Para qué sirve?
+
+* Evitar que los jugadores cambien la cámara a tercera persona (**F5**) durante minijuegos o cinemáticas.
+* Bloquear la pantalla de depuración (**F3**) para evitar que vean coordenadas o información en mapas de misterio.
+
+---
+
+## ¿Cómo identificas qué tecla quieres bloquear?
+
+El juego reconoce las teclas del teclado por nombres estándar de Minecraft. Casi todas las teclas empiezan por el texto `key.keyboard.`.
+
+### Lista de nombres de teclas más comunes:
+
+| Tecla en tu Teclado | Nombre que debes colocar |
+| :--- | :--- |
+| **F5** (Ver personaje / tercera persona) | `key.keyboard.f5` |
+| **F3** (Pantalla de coordenadas) | `key.keyboard.f3` |
+| **F1** (Ocultar la barra y vida) | `key.keyboard.f1` |
+| **Barra Espaciadora** | `key.keyboard.space` |
+| **Shift Izquierdo** (Agacharse) | `key.keyboard.left.shift` |
+| **Tabulador** (Ver lista de jugadores) | `key.keyboard.tab` |
+| **Letra E** (Abrir inventario) | `key.keyboard.e` |
+| **Escape** (Menú de pausa) | `key.keyboard.escape` |
+
+---
+
+## Archivo de Configuración (`keydisabled.json`)
+
+Se encuentra en `config/CommonUtils/keydisabled.json` (en servidor Mod) o en `plugins/CommonUtils/keydisabled.json` (en servidor Spigot/Paper).
+
+Ejemplo del archivo:
+
+```json
+{
+  "disabledKeys": [
+    "key.keyboard.f5",
+    "key.keyboard.f3"
+  ]
+}
+```
+
+* **`disabledKeys`**: Escribe aquí la lista de teclas que quieres que estén bloqueadas en tu servidor por defecto.
+
+---
+
+## Comandos en el Juego
+
+> **Nota**: Se requieren permisos de operador (**OP**).
+
+### 1. Bloquear una nueva tecla
+```bash
+/keydisabled add <nombre_de_la_tecla>
+```
+* **Ejemplo**: `/keydisabled add key.keyboard.f5`
+* Deshabilita inmediatamente la tecla F5 a todos los jugadores conectados.
+
+### 2. Desbloquear una tecla
+```bash
+/keydisabled remove <nombre_de_la_tecla>
+```
+* **Ejemplo**: `/keydisabled remove key.keyboard.f5`
+* Vuelve a permitir el uso de la tecla F5. El comando te sugerirá las teclas bloqueadas actualmente.
+
+### 3. Restablecer y desbloquear todas las teclas
+```bash
+/keydisabled reset
+```
+* Limpia la lista y vuelve a permitir el uso de absolutamente todas las teclas del teclado.

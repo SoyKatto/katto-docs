@@ -1,0 +1,116 @@
+---
+title: Multimedia y Cinemáticas
+description: Aprende a mostrar animaciones GIF, reproducir audios locales y poner videos cinemáticos por enlace o archivo.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Este módulo le permite al servidor proyectar contenido de imagen, audio y video en la pantalla y bocinas de los jugadores utilizando la tecnología de **WaterMedia**.
+
+---
+
+## Reglas para Nombres de Archivos y Carpetas
+
+* **Para Audios y Animaciones GIF**: Los archivos **deben ser archivos locales** colocados dentro de su carpeta correspondiente en el cliente del jugador (dentro de `.minecraft/`).
+* **Sintaxis en los Comandos**: Al ejecutar los comandos para reproducir archivos locales, **solo debes escribir el nombre del archivo con su extensión** (por ejemplo `cancion.mp3` o `video.mp4`). **No** debes escribir rutas de carpetas adicionales.
+* **Cinemáticas de Video**: Se pueden reproducir tanto por enlace directo de internet (URL `https://...`) como mediante un archivo local.
+
+### Ubicación de Carpetas en el Cliente (`.minecraft/`):
+
+| Tipo de Contenido | Carpeta en `.minecraft/` | Formatos Soportados | ¿Qué pones en el comando? |
+| :--- | :--- | :--- | :--- |
+| **Audios y Música** | `.minecraft/audios/` | `.mp3`, `.ogg`, `.wav` | Solo el nombre y extensión (ej. `cancion.mp3`) |
+| **Animaciones GIF** | `.minecraft/animations/` | `.gif` | Solo el nombre del GIF sin extensión (ej. `logo`) |
+| **Videos y Cinemáticas** | `.minecraft/cinematics/` o Enlace URL | `.mp4`, etc. | El enlace `https://...` o solo el nombre (ej. `intro.mp4`) |
+
+---
+
+## 1. Animaciones e Imágenes GIF (`/playanimation`)
+
+Permite poner una animación GIF flotando en alguna parte de la pantalla del jugador.
+
+### Ubicación del archivo:
+* Los archivos GIF se colocan en la carpeta `.minecraft/animations/` del jugador (por ejemplo `.minecraft/animations/logo.gif`).
+
+### Posiciones disponibles en pantalla:
+
+| Nombre de la posición | ¿Dónde se verá en la pantalla? |
+| :--- | :--- |
+| `center` | En el centro exacto de la pantalla. |
+| `hotbar` | Encima de la barra donde se llevan las herramientas. |
+| `top_right` | En la esquina superior derecha. |
+| `top_left` | En la esquina superior izquierda. |
+| `bottom_left` | En la esquina inferior izquierda. |
+| `bottom_right` | En la esquina inferior derecha. |
+| `full_screen` | Ocupando toda la pantalla completa. |
+
+### Comandos de Animación:
+
+* **Poner una animación**:
+  ```bash
+  /playanimation <posicion> <jugadores> <nombre_del_gif> <ancho> <alto> <repetir>
+  ```
+  * **Ejemplo**: `/playanimation center @a logo 200 200 true`
+  * Muestra la animación del archivo `.minecraft/animations/logo.gif` en el centro de la pantalla.
+* **Quitar la animación**:
+  ```bash
+  /stopanimation <jugadores>
+  ```
+  * **Ejemplo**: `/stopanimation @a`
+
+---
+
+## 2. Reproducir Audios y Canciones (`/playaudio`)
+
+Reproduce un archivo de sonido guardado en la carpeta de audios del cliente del jugador con control de volumen (de 0 a 100).
+
+### Ubicación del archivo:
+* El archivo debe colocarse en la carpeta `.minecraft/audios/` del jugador (por ejemplo `.minecraft/audios/cancion.mp3`).
+
+### Comandos de Audio:
+
+* **Reproducir audio**:
+  ```bash
+  /playaudio <jugadores> <nombre_del_archivo> <volumen>
+  ```
+  * **Ejemplo**: `/playaudio @a cancion.mp3 80`
+  * Reproduce el archivo guardado en `.minecraft/audios/cancion.mp3` a un volumen de 80. *(Solo colocas `cancion.mp3` en el comando).*
+* **Detener audio**:
+  ```bash
+  /stopaudio <jugadores>
+  ```
+  * **Ejemplo**: `/stopaudio @a`
+
+---
+
+## 3. Poner Videos y Cinemáticas (`/playcinematic`)
+
+Proyecta un video en pantalla completa a los jugadores.
+
+### Controles de Teclado durante el Video:
+
+* **Subir Volumen del Video**: Presionar la tecla **Flecha Arriba (`↑`)** (sube de 5% en 5% y muestra el nivel de volumen en la esquina).
+* **Bajar Volumen del Video**: Presionar la tecla **Flecha Abajo (`↓`)** (baja de 5% en 5%).
+* **Salir o Saltear Cinemática *(Solo Administradores / OP)***: Presionar la combinación de teclas **`CTRL + BACKSPACE`** (Control + Tecla de borrado/retroceso).
+  *(Nota: La tecla ESC no cierra el video por defecto para evitar que los jugadores comunes se salten la cinemática).*
+
+### Comandos de Cinemática:
+
+* **Reproducir video mediante enlace de Internet (URL)**:
+  ```bash
+  /playcinematic <jugadores> <enlace_del_video> <volumen>
+  ```
+  * **Ejemplo**: `/playcinematic @a https://misitio.com/video.mp4 100`
+
+* **Reproducir video local**:
+  ```bash
+  /playcinematic <jugadores> <nombre_del_archivo> <volumen>
+  ```
+  * **Ejemplo**: `/playcinematic @a intro.mp4 100`
+  * Reproduce el archivo guardado en `.minecraft/cinematics/intro.mp4` a un volumen de 100. *(Solo colocas `intro.mp4` en el comando).*
+
+* **Detener video desde el servidor**:
+  ```bash
+  /stopcinematic <jugadores>
+  ```
+  * **Ejemplo**: `/stopcinematic @a`

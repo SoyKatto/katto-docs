@@ -1,40 +1,37 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: Katto Docs
+description: Centro oficial de documentación y guías sencillas para los mods y plugins de Katto.
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
+  tagline: Centro oficial de guías sencillas, configuración y manuales para administrar los mods y plugins creados por Katto.
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Empezar con Common Utils
+      link: /common-utils/overview/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+      variant: primary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## Módulos de Common Utils
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="¿Qué es y Diferencias?" icon="open-book">
+		Aprende qué es Common Utils de forma sencilla y cuáles son las diferencias entre usarlo como Plugin de servidor o como Mod.
 	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
+	<Card title="Xaero's Utils (Waypoints)" icon="setting">
+		Conecta tu servidor con Xaero's Minimap y World Map para enviar waypoints en el mapa de forma automática y organizarlos en grupos.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Indicador PVP y Temporizadores" icon="information">
+		Muestra una barra visual en la pantalla de los jugadores con el estado del combate PVP, estadísticas en vivo, temporizadores y notificaciones del evento.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Bloqueo de Teclas" icon="warning">
+		Bloquea teclas del teclado (como F5 o F3) de los jugadores de forma remota mientras están conectados a tu servidor.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Multimedia y Cinemáticas" icon="laptop">
+		Proyecta animaciones GIF en pantalla, reproduce audios almacenados localmente y pon videos cinemáticos a los jugadores.
+	</Card>
+	<Card title="Gestor de Idiomas (LangManager)" icon="translate">
+		Controla y limita los idiomas disponibles dentro del menú de Selección de Idioma de las opciones de Minecraft del jugador.
 	</Card>
 </CardGrid>

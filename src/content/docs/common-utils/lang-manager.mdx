@@ -1,0 +1,52 @@
+---
+title: Gestor de Idiomas (LangManager)
+description: Configuración del lado del cliente para filtrar los idiomas disponibles en el menú de opciones de Minecraft.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+El módulo **LangManager (Gestor de Idiomas)** es una función **exclusiva del lado del cliente**. Se configura localmente en la computadora del jugador para controlar y filtrar qué idiomas se muestran dentro del menú de Selección de Idioma de las opciones de Minecraft.
+
+---
+
+## ¿Para qué sirve?
+
+Permite personalizar la lista de idiomas disponibles en el cliente. Si un idioma no está incluido en la lista configurada, quedará oculto en el menú del juego, permitiendo que el cliente solo muestre idiomas específicos (por ejemplo, limitar la lista únicamente a español e inglés).
+
+---
+
+## Archivo de Configuración en el Cliente (`langmanager.json`)
+
+> **Ubicación**: Este archivo **se configura en el cliente** dentro de la carpeta del juego:  
+> `.minecraft/config/CommonUtils/langmanager.json`
+
+Ejemplo del archivo de configuración:
+
+```json
+{
+  "enabled": true,
+  "languages": [
+    "en_us",
+    "es_mx"
+  ]
+}
+```
+
+### Opciones del archivo:
+
+| Opción | Valores posibles | ¿Para qué sirve? |
+| :--- | :--- | :--- |
+| `enabled` | `true` o `false` | **`true` (Activado)**: Aplica el filtro en el menú de Selección de Idioma del cliente.<br/>**`false` (Desactivado)**: Muestra la lista completa normal de idiomas de Minecraft. |
+| `languages` | Lista de códigos | Lista de códigos de idiomas permitidos que se mostrarán en el menú de opciones de Minecraft. |
+
+---
+
+## Ejemplos de Códigos de Idioma
+
+| Idioma | Código en `languages` |
+| :--- | :--- |
+| **Español (México)** | `es_mx` |
+| **Español (España)** | `es_es` |
+| **Español (Argentina)** | `es_ar` |
+| **Español (Chile)** | `es_cl` |
+| **Inglés (Estados Unidos)** | `en_us` |

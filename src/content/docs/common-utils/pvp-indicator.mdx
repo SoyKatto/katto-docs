@@ -1,0 +1,113 @@
+---
+title: Indicador PVP y Temporizadores
+description: Guía completa del indicador para eventos de PVP, temporizadores de combate y notificaciones.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Este módulo es un **indicador para eventos y combate PVP (Player vs Player)**. Muestra una barra visual en la pantalla de los jugadores que informa sobre el estado del PVP, estadísticas de combate en vivo y temporizadores del evento.
+
+---
+
+## Información del Indicador de PVP en Pantalla
+
+Cuando el indicador de PVP está activo, muestra a los jugadores:
+
+* **Estado de PVP**: Un letrero que avisa si el combate PVP está **ACTIVADO** (`🗡 PvP Activado`) o si el combate está **DESACTIVADO** en ese momento.
+* **Asesinatos de PVP (Kills)**: Muestra la cantidad de bajas de PVP acumuladas por el jugador (`☠`).
+* **Jugadores Vivos**: Muestra la cantidad de participantes en modo Supervivencia (*Survival*) que continúan vivos en el evento de PVP (`⛏`).
+* **Borde del Mundo**: Muestra el tamaño actual en bloques del límite del mapa (*WorldBorder*) (`⚠`).
+* **Traducción Automática**: Detecta si el jugador tiene su juego en español para mostrar los textos formateados en su idioma.
+
+---
+
+## Archivos de Configuración
+
+### 1. Configuración en el Servidor (`pvpindicator.json`)
+Se encuentra en `config/CommonUtils/pvpindicator.json` (en servidores Mod) o `plugins/CommonUtils/pvpindicator.json` (en Spigot/Paper).
+
+```json
+{
+  "enabled": false,
+  "pvp": false
+}
+```
+
+| Opción | Valores posibles | ¿Para qué sirve? |
+| :--- | :--- | :--- |
+| `enabled` | `true` o `false` | **`true`**: Activa y muestra el indicador de PVP en la pantalla de los jugadores.<br/>**`false`**: Oculta el indicador de PVP. |
+| `pvp` | `true` o `false` | **`true`**: Marca que el combate PVP está permitido.<br/>**`false`**: Marca que el combate PVP está deshabilitado. |
+
+---
+
+### 2. Configuración en el Cliente (`pvpindicator_client.json`) y Textura de Fondo
+
+Ubicación del archivo de opciones visuales en la computadora del jugador:  
+`.minecraft/config/CommonUtils/pvpindicator_client.json`
+
+```json
+{
+  "indicatorText": "☠ %s  ⛏ %s  ⚠ %s",
+  "pvpTextEs": "🗡 PvP Activado",
+  "pvpTextEn": "🗡 PvP On",
+  "textureBackground": false,
+  "timer": {
+    "textEs": "Restante para %s: %s",
+    "textEn": "Remaining for %s: %s",
+    "lineColor": "#FFFF78AA"
+  }
+}
+```
+
+* **`indicatorText`**: Formato del texto informativo de muertes, jugadores vivos y borde del mundo.
+* **`pvpTextEs` / `pvpTextEn`**: Texto que se muestra cuando el PVP está activado (en español o inglés).
+* **`textureBackground`**: Si se cambia a `true`, la barra del indicador usará una imagen de textura personalizada en lugar del fondo transparente oscuro por defecto.
+* **`lineColor`**: Color de la línea de tiempo del temporizador en formato HEX con transparencia.
+
+#### Ubicación de la imagen de textura de fondo:
+Si activas `"textureBackground": true`, debes colocar la imagen PNG del fondo en la siguiente ruta del cliente:  
+`.minecraft/config/CommonUtils/indicator.png`
+
+---
+
+## Comandos del Módulo PVP
+
+> **Nota**: Requiere permisos de operador (**OP**).
+
+### 1. Activar o desactivar el indicador en pantalla
+```bash
+/pvpindicator enabled <true o false>
+```
+* **Ejemplo**: `/pvpindicator enabled true` (Muestra el indicador de PVP a todos los jugadores).
+
+### 2. Activar o desactivar la señal de combate PVP
+```bash
+/pvpindicator pvp <true o false>
+```
+* **Ejemplo**: `/pvpindicator pvp true` (Establece la señal de PVP en activado).
+
+### 3. Iniciar un temporizador para el PVP
+```bash
+/pvpindicator timer start <minutos> <segundos> <nombre_evento>
+```
+* **Ejemplo**: `/pvpindicator timer start 5 0 PVP`
+* Inicia una cuenta regresiva de 5 minutos etiquetada para el evento `PVP`.
+
+### 4. Detener el temporizador
+```bash
+/pvpindicator timer stop
+```
+* Oculta el temporizador activo de la pantalla.
+
+### 5. Enviar un aviso flotante de texto
+```bash
+/pvpindicator notis <duracion_en_segundos> <mensaje>
+```
+* **Ejemplo**: `/pvpindicator notis 10 ¡El combate PVP ha comenzado!`
+* Despliega un mensaje flotante durante 10 segundos.
+
+### 6. Reiniciar el contador de muertes de PVP *(Solo Servidores Mod)*
+```bash
+/pvpindicator resetkills
+```
+* Reinicia a cero el contador de muertes de PVP de todos los jugadores.

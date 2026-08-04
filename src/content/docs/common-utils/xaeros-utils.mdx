@@ -1,0 +1,117 @@
+---
+title: Xaero's Utils (Waypoints y Mapa)
+description: Guía fácil para enviar waypoints de mapa, organizarlos en grupos y configurar las opciones de Xaero's Minimap.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Este módulo sirve para conectar tu servidor con el mod **Xaero's Minimap** o **Xaero's World Map** que tengan instalado los jugadores. Te permite mandarles waypoints en el mapa de forma automática.
+
+---
+
+## ¿Cómo funciona para los jugadores?
+
+1. **Grupo propio (`CommonUtils`)**: Todos los waypoints que envía el servidor se guardan en un grupo separado llamado `"CommonUtils"`. Esto evita que los waypoints del servidor borren o desordenen los waypoints personales que el jugador haya guardado por su cuenta.
+2. **Ver todos los waypoints a la vez**: El mod activa automáticamente la opción para que el jugador pueda ver sus waypoints personales y los waypoints del servidor al mismo tiempo.
+3. **Waypoints de equipo**: Puedes crear waypoints que únicamente puedan ver los jugadores que formen parte de un equipo específico de Minecraft.
+4. **Protección de waypoints**: Puedes hacer que el servidor limpie los waypoints personales de los jugadores durante un evento o permitir listas de excepciones.
+
+---
+
+## Archivo de Configuración (`xaerosutils.json`)
+
+Se encuentra en `config/CommonUtils/xaerosutils.json` (en servidores Mod) o en `plugins/CommonUtils/xaerosutils.json` (en servidores Spigot/Paper).
+
+Ejemplo del archivo:
+
+```json
+{
+  "waypoints": [
+    "waypoint;Spawn;S;0;64;0;5;normal;;minecraft:overworld"
+  ],
+  "minimap": true,
+  "worldmap": true,
+  "radar": false,
+  "caves": true,
+  "waypointsEnabled": true,
+  "externalWaypoints": false,
+  "exceptionsWaypoints": []
+}
+```
+
+### Opciones explicadas de forma sencilla:
+
+| Opción | Valores posibles | ¿Para qué sirve? |
+| :--- | :--- | :--- |
+| `waypoints` | Lista de waypoints | Guarda la lista de waypoints creados por el servidor. (Te recomendamos crearlos con comandos en el juego). |
+| `externalWaypoints` | `false` o `true` | **`false` (Recomendado)**: Borra los waypoints personales de los jugadores mientras estén en tu servidor.<br/>**`true`**: Deja que los jugadores conserven sus waypoints personales. |
+| `exceptionsWaypoints` | Lista de nombres | Nombres de grupos de waypoints de otros mods (como waystones) que **NO** quieres que se borren aunque `externalWaypoints` esté en `false`. |
+| `minimap` | `true` o `false` | *(Solo servidor Mod)* Activa o desactiva la ventana del minimapa en la esquina. |
+| `worldmap` | `true` o `false` | *(Solo servidor Mod)* Permite o prohíbe abrir la pantalla del mapa grande. |
+| `radar` | `true` o `false` | *(Solo servidor Mod)* Muestra u oculta los marcadores de otros jugadores y criaturas en el minimapa. |
+| `caves` | `true` o `false` | *(Solo servidor Mod)* Permite o bloquea la vista de cuevas bajo tierra en el mapa. |
+| `waypointsEnabled` | `true` o `false` | *(Solo servidor Mod)* Enciende o apaga por completo el sistema de waypoints de mapa. |
+
+---
+
+## Comandos en el Juego y Parámetros
+
+> **Nota**: Para usar estos comandos necesitas ser operador (**OP**) en tu servidor.
+
+### Explicación de los Parámetros de Tipo y Textura:
+
+* **`<tipo>`**: Define el estilo visual del waypoint. Puede tomar dos valores:
+  * `"normal"`: Usa el marcador clásico de Xaero's Minimap.
+  * `"texture"`: Usa una imagen o textura personalizada de Minecraft.
+* **`<textura>`**:
+  * Si el `<tipo>` es `"normal"`, en el parámetro de textura **no se pone nada y se deja vacío entre comillas: `""`**.
+  * Si el `<tipo>` es `"texture"`, se escribe la ruta de la textura de Minecraft deseada (por ejemplo `"minecraft:textures/item/diamond.png"`).
+
+---
+
+## Diferencias de Comandos entre Plugin y Mod
+
+La forma de crear waypoints de equipo cambia según si usas el plugin de Spigot/Paper o el mod en tu servidor:
+
+### 1. En Servidores Plugin (Spigot / Paper)
+
+* **Crear Waypoint Global**:
+  ```bash
+  /xaerosutils waypoints create <X Y Z> <nombre> <iniciales> <color> <mundo> <tipo> <textura>
+  ```
+  * **Ejemplo Normal**: `/xaerosutils waypoints create 0 64 0 Spawn S 5 minecraft:overworld normal ""`
+  * **Ejemplo con Textura**: `/xaerosutils waypoints create 0 64 0 Diamante D 3 minecraft:overworld texture minecraft:textures/item/diamond.png`
+
+* **Crear Waypoint para un Equipo (Subcomando `create_team`)**:
+  ```bash
+  /xaerosutils waypoints create_team <X Y Z> <nombre> <iniciales> <color> <mundo> <tipo> <textura> <equipo>
+  ```
+  * **Ejemplo**: `/xaerosutils waypoints create_team 100 70 -200 Base_Roja R 4 minecraft:overworld normal "" EquipoRojo`
+
+---
+
+### 2. En Servidores Mod (Fabric / Forge / NeoForge)
+
+* **Crear Waypoint (Con equipo Opcional al final)**:
+  En servidores Mod **no existe el subcomando `create_team`**. El equipo es simplemente un **argumento opcional al final** del comando principal:
+  ```bash
+  /xaerosutils waypoints create <posicion> <nombre> <iniciales> <color> <tipo> <textura> [equipo]
+  ```
+  * **Ejemplo Global**: `/xaerosutils waypoints create 0 64 0 Spawn S 5 normal ""`
+  * **Ejemplo para un Equipo**: `/xaerosutils waypoints create 100 70 -200 Base_Roja R 4 normal "" EquipoRojo`
+
+* **Modificar opciones de configuración desde el juego**:
+  ```bash
+  /xaerosutils properties <propiedad> <true o false>
+  ```
+  * **Ejemplo**: `/xaerosutils properties radar false` (Desactiva el radar directamente).
+
+---
+
+### 3. Borrar un Waypoint (En Ambos)
+
+```bash
+/xaerosutils waypoints remove <nombre>
+```
+* **Ejemplo**: `/xaerosutils waypoints remove Spawn`
+* Borra el waypoint del archivo de configuración y lo quita de la pantalla de todos los jugadores.

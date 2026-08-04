@@ -1,0 +1,54 @@
+---
+title: ¿Qué es y Diferencias?
+description: Explicación sencilla de qué es Common Utils y las diferencias entre usar la versión de Plugin y la versión de Mod.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+**Common Utils** es una herramienta para servidores y jugadores de Minecraft. Su objetivo principal es permitir que el servidor de juego le ordene al mapa o a la pantalla del jugador que muestre funciones especiales (como waypoints en el mapa, barras de tiempo, imágenes, audios o deshabilitar teclas).
+
+---
+
+## ¿Para qué sirve?
+
+Si eres dueño o administrador de un servidor, **Common Utils** te permite:
+* Crear **waypoints** en el mapa para todos los jugadores de forma automática.
+* Mostrar un **indicador para PVP** en pantalla con el número de jugadores vivos y bajas.
+* Poner **temporizadores** en pantalla y enviar **avisos flotantes de texto**.
+* **Bloquear teclas del teclado** (como F5 o F3) durante eventos para que los jugadores no cambien la vista ni vean coordenadas.
+* **Reproducir canciones, sonidos, animaciones GIF y videos cinemáticos** guardados en las carpetas del cliente.
+* **Limitar los idiomas** que los jugadores pueden seleccionar dentro del menú de opciones de Minecraft.
+
+---
+
+## ¿Dónde se instala y cómo funciona?
+
+Common Utils se divide en dos partes:
+
+1. **En el Servidor**: Se coloca como Plugin (si usas Spigot o Paper) o como Mod (si tu servidor usa Fabric, Forge o NeoForge).
+2. **En la Computadora del Jugador**: Los jugadores instalan el Mod de Common Utils dentro de su carpeta de mods (`.minecraft/mods`) para que su juego pueda procesar todo lo que el servidor ordena.
+
+---
+
+## Diferencias entre Usar Plugin o Usar Mod en el Servidor
+
+Aquí tienes una tabla muy sencilla para entender las diferencias principales:
+
+| ¿Qué cambia? | Servidor con Mod (Fabric/Forge/NeoForge) | Servidor con Plugin (Spigot/Paper) |
+| :--- | :--- | :--- |
+| **Carpeta donde se guardan las opciones** | Carpeta `config/CommonUtils/` en tu servidor. | Carpeta `plugins/CommonUtils/` en tu servidor. |
+| **Visualización en pantalla** | El mod en la computadora del jugador se encarga de dibujar el minimapa y las ventanas. | El servidor envía las órdenes y el mod del jugador las dibuja. |
+| **Idioma de las opciones** | Detecta automáticamente si el jugador tiene su Minecraft en español (`es_es`, `es_mx`, `es_ar`, etc.). | El servidor manda los datos numéricos y el mod del jugador pone el idioma. |
+| **Archivo de Licencia** | Requiere el archivo `license.json` dentro de `config/CommonUtils/`. | Requiere el archivo `license.json` dentro de `plugins/CommonUtils/`. |
+
+---
+
+## Módulos Incluidos
+
+El proyecto incluye 6 módulos principales:
+
+1. **Xaero's Utils**: Sincronización remota y protección de waypoints para Xaero's Minimap y World Map.
+2. **Indicador PVP y Temporizadores**: HUD interactivo para combate PVP, métricas del evento, temporizadores y avisos.
+3. **Bloqueo de Teclas (KeyDisabled)**: Restricción remota de teclas en los clientes.
+4. **Multimedia y Cinemáticas**: Proyección de imágenes/GIFs, audios locales y videos cinemáticos.
+5. **Gestor de Idiomas (LangManager)**: Control de los idiomas disponibles en las opciones del juego.
