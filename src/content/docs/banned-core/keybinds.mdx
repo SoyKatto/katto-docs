@@ -1,0 +1,36 @@
+---
+title: Bloqueo de Teclas (Efecto Suerte 100)
+description: Restricción automática de teclas de movimiento basada en el efecto de poción Suerte Nivel 100.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Banned Core incluye un mecanismo de restricción de controles en el cliente del jugador vinculado al estado de los efectos en tiempo real.
+
+---
+
+## ¿Cómo Funciona?
+
+A diferencia de los comandos de bloqueo manuales, esta función está vinculada al estado de los efectos de poción del jugador:
+
+* **Condición de Activación**: El sistema en cliente evalúa constantemente los efectos activos del jugador. Si el jugador posee el efecto **Suerte (`minecraft:luck`)** en nivel 99 o 100 (Suerte Nivel 100), las teclas de control son ignoradas automáticamente.
+* **Teclas Afectadas**:
+  * Teclas de movimiento (Avanzar `W`, Retroceder `S`, Izquierda `A`, Derecha `D`).
+  * Tecla de Salto (`Espacio`).
+  * Tecla de Agacharse (`Shift`).
+
+---
+
+## Ejemplo de Aplicación en Servidor
+
+Para inmovilizar a un jugador desde el servidor sin alterar su modo de juego ni usar comandos invasivos, basta con aplicar el efecto de Suerte Nivel 100:
+
+```bash
+/effect give <jugador> minecraft:luck <duracion> 99 true
+```
+
+* **Remover restricción**:
+  ```bash
+  /effect clear <jugador> minecraft:luck
+  ```
+  Al retirar el efecto, los controles del teclado se desbloquean instantáneamente en la computadora del jugador.

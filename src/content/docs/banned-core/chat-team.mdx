@@ -1,0 +1,68 @@
+---
+title: Chat de Equipos y Colores Hex
+description: Guía de configuración para el chat, mensajes de entrada/salida, variables %player% y %team%, soporte de colores HEX y chat por equipos (Exclusivo de Servidor Mod).
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+:::note[Módulo Exclusivo de Servidor Mod]
+El sistema de formato de Chat y archivo `chat.json` es exclusivo de la versión de **Servidor Mod (Fabric/Forge/NeoForge)**.
+:::
+
+Banned Core incluye un motor de formateo de chat enriquecido que soporta mensajes de entrada/salida personalizados, variables de jugador y equipo (`%player%` y `%team%`), formatos por equipos y colores Hexadecimales exactos (`&#RRGGBB`).
+
+---
+
+## Formato del Archivo `chat.json`
+
+El archivo de configuración se crea automáticamente en `config/BannedCore/chat.json`:
+
+```json
+{
+  "enabled": true,
+  "join": "&e%player% se conectó.",
+  "leave": "&e%player% se desconectó.",
+  "chat": "%team% &c%player%: &r",
+  "teams": {
+    "teams_enabled": false,
+    "teams_chat": {
+      "staff": "&4[Staff] %player%: &r"
+    }
+  }
+}
+```
+
+### Explicación de Propiedades:
+
+* `enabled`: Define si el formateador global de mensajes de chat y entrada/salida está activo (`true`) o desactivado (`false`).
+* `join`: Mensaje que se muestra en el chat cuando un jugador ingresa al servidor. Soporta el comodín `%player%`.
+* `leave`: Mensaje que se muestra en el chat cuando un jugador abandona el servidor. Soporta el comodín `%player%`.
+* `chat`: Formato predeterminado para los mensajes de chat enviados por cualquier jugador.
+* `teams`: Categoría de configuración para formatos por equipo:
+  * `teams_enabled`: Habilita (`true`) o deshabilita (`false`) la búsqueda de formatos específicos por equipo.
+  * `teams_chat`: Un mapa con el par **`"nombre_del_equipo": "formato_de_chat"`**. Si el equipo del jugador coincide, usará este formato en lugar del formato predeterminado `chat`.
+
+---
+
+## Variables de Reemplazo
+
+Puedes utilizar los siguientes comodines en cualquier formato de texto de chat:
+
+* **`%player%`**: Se reemplaza automáticamente por el nombre del jugador que envía el mensaje o realiza la acción.
+* **`%team%`**: Se reemplaza automáticamente por el nombre formateado del equipo de Minecraft al que pertenece el jugador (si el jugador pertenece a un equipo registrado).
+
+---
+
+## Sintaxis de Colores y Formatos
+
+### 1. Colores Hexadecimales (`&#RRGGBB`)
+Para utilizar colores modernos en mensajes de chat, añade el prefijo `&#` seguido de los **6 dígitos hexadecimales** del color (`&#RRGGBB`):
+* `&#FF0000` -> Rojo Puro
+* `&#00FF88` -> Verde Esmeralda / Menta
+* `&#5599FF` -> Azul Claro
+
+> **Nota de Formato**: Los colores de chat utilizan **6 dígitos** (`&#RRGGBB`). En otros archivos de interfaz gráfica (como `indications.json`), los colores HEX aceptan **6 u 8 dígitos** (formatos RGB de 6 dígitos `#RRGGBB` y ARGB con alfa/transparencia de 8 dígitos `#AARRGGBB`).
+
+### 2. Códigos de Formato Clásicos (`&`)
+* **Colores**: `&0` a `&9`, `&a` a `&f`
+* **Estilos**: `&k` (ofuscado), `&l` (negrita), `&m` (tachado), `&n` (subrayado), `&o` (cursiva), `&r` (reiniciar formato)

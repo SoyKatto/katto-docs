@@ -9,9 +9,44 @@ hero:
       link: /common-utils/overview/
       icon: right-arrow
       variant: primary
+    - text: Guía de Banned Core
+      link: /banned-core/overview/
+      icon: right-arrow
+      variant: secondary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Módulos de Banned Core
+
+<CardGrid stagger>
+	<Card title="¿Qué es y Configuración General?" icon="open-book">
+		Aprende las funciones de Banned Core, su arquitectura híbrida de Mod y Plugin, y la estructura de carpetas de configuración.
+	</Card>
+	<Card title="Chat de Equipos y Colores Hex" icon="setting">
+		Personaliza mensajes de entrada/salida, chat por equipos y colores Hexadecimales (Servidor Mod).
+	</Card>
+	<Card title="TP por Área y Transiciones" icon="external">
+		Teletransporta grupos de jugadores dentro de un área 3D y ejecuta transiciones de pantalla a color.
+	</Card>
+	<Card title="Gestor de Secuencias" icon="document">
+		Ejecuta cadenas coordinadas de comandos con pausas de tiempo mediante archivos de texto (.txt) en la carpeta Sequences.
+	</Card>
+	<Card title="Tabla de Clasificación (Leaderboard)" icon="list-format">
+		Proyecta ránkings dinámicos en pantalla con descarga remota/local por ID y cálculo automático de proporción visual.
+	</Card>
+	<Card title="Indicaciones y Gestor de Espera" icon="information">
+		Proyecta pantallas emergentes de reglas por API Java y administra la sala de espera (Gestor de Espera exclusivo de Mod).
+	</Card>
+	<Card title="Bloqueo de Teclas (Suerte 100)" icon="warning">
+		Desactiva automáticamente los controles de movimiento del teclado del jugador al recibir el efecto Suerte Nivel 100.
+	</Card>
+	<Card title="Silenciador de Voz (Plasmo Voice)" icon="comment-alt">
+		Silencia la voz por micrófono en Plasmo Voice y bloquea el chat de texto de los participantes reteniendo permisos para OP.
+	</Card>
+</CardGrid>
+
+---
 
 ## Módulos de Common Utils
 

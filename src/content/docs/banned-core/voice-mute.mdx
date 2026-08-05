@@ -1,0 +1,60 @@
+---
+title: Silenciador de Voz y Chat (Plasmo Voice)
+description: Integración con Plasmo Voice y bloqueo de chat para silenciar a los participantes durante la partida.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Banned Core se integra de forma nativa con **Plasmo Voice** para silenciar automáticamente la voz y bloquear los mensajes de chat de los participantes mientras mantiene a los administradores (OP) con voz y chat libres.
+
+---
+
+## ¿Cómo Funciona?
+
+Cuando el módulo de silenciador está activo:
+
+1. **Voz por Micrófono (Plasmo Voice)**: Aplica un silenciamiento global directo a todos los jugadores normales conectados a Plasmo Voice.
+2. **Mensajes de Chat**: Cancela el envío de mensajes de texto en el chat para los jugadores que no posean permisos de administrador (OP).
+3. **Exclusión de Administradores**: Los jugadores con permisos de OP (Nivel 4) son ignorados y conservan el micrófono y chat abiertos.
+
+---
+
+## Control en Servidor Mod (Fabric/Forge/NeoForge)
+
+En el Servidor Mod, se controla mediante la GameRule **`mute`**:
+
+* **Activar silencio de voz y chat**:
+  ```bash
+  /gamerule mute true
+  ```
+* **Desactivar silencio de voz y chat**:
+  ```bash
+  /gamerule mute false
+  ```
+
+---
+
+## Control en Servidor Plugin (Spigot/Paper)
+
+En el Servidor Plugin, se utiliza el comando `/voice_mute` y el archivo de configuración `voice_mute.json`:
+
+### Comando de Control:
+```bash
+/voice_mute enabled <true|false>
+```
+
+* **Activar silencio de voz**:
+  ```bash
+  /voice_mute enabled true
+  ```
+* **Desactivar silencio de voz**:
+  ```bash
+  /voice_mute enabled false
+  ```
+
+### Archivo de Configuración (`voice_mute.json`):
+```json
+{
+  "enabled": true
+}
+```

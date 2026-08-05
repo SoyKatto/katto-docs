@@ -1,0 +1,55 @@
+---
+title: ¿Qué es Banned Core y Configuración General?
+description: Explicación de las funciones de Banned Core, archivos de configuración e instalación en servidor y cliente.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+**Banned Core** es el sistema central de gestión para eventos y servidores avanzados de Minecraft. Proporciona herramientas integradas para chat de equipos con soporte de colores HEX, tablas de clasificación dinámicas (Leaderboard), cadenas de comandos y secuencias por archivos, teletransporte por áreas 3D, efectos de transición, pantallas emergentes de indicaciones, silenciador de voz y gestores de sala de espera/whitelist.
+
+---
+
+## ¿Para qué sirve?
+
+Si administras o desarrollas eventos en un servidor, **Banned Core** te permite:
+
+* **Chat por Equipos Avanzado *(Exclusivo Servidor Mod)***: Formatear mensajes con colores Hexadecimales (`&#RRGGBB`), variables `%player%` y `%team%`, y códigos de formato tradicionales (`&a`, `&l`, etc.).
+* **Tablas de Clasificación (Leaderboards)**: Enviar métricas y ránkings a la pantalla del jugador con descarga remota de imágenes y ajuste automático de proporción visual del encabezado.
+* **Gestor de Secuencias**: Ejecutar cadenas coordinadas de comandos almacenadas en archivos de texto `.txt`.
+* **Teletransporte por Área (3D Bounding Box)**: Trasladar grupos de jugadores que se encuentren dentro de un volumen cúbico definido por dos coordenadas.
+* **Efectos de Transición**: Crear transiciones de pantalla configurables en blanco y negro (`/transition`).
+* **Pantalla de Indicaciones**: Enviar una interfaz emergente interactiva por API con título, controles y reglas de la partida.
+* **Gestor de Espera y Whitelist *(Exclusivo Servidor Mod)***: Administrar la sala de espera pre-evento con la regla `/gamerule waiting`, filtrado por modo de juego (`gamemode`) e indicador HUD para administradores (OP).
+* **Silenciador de Voz y Chat (Plasmo Voice)**: Silenciar la transmisión de micrófono y chat de texto de los participantes reteniendo permisos para administradores (OP).
+* **Bloqueo de Teclas por Efecto**: Desactivar controles de movimiento del teclado automáticamente cuando un jugador posee el efecto Suerte Nivel 100.
+
+---
+
+## Arquitectura del Proyecto
+
+Banned Core está diseñado como un proyecto híbrido multitarget:
+
+1. **En el Servidor**: Se instala como **Plugin** (Spigot/Paper) o como **Mod** (Fabric/Forge/NeoForge).
+2. **En la Computadora del Jugador**: Los jugadores instalan el mod cliente en su carpeta `.minecraft/mods` para procesar el renderizado en pantalla de las tablas, pantallas de espera e indicaciones.
+
+---
+
+## Carpetas de Configuración
+
+| Plataforma | Ubicación de Configuración | Archivos Generados |
+| :--- | :--- | :--- |
+| **Servidor Mod (Fabric/Forge/NeoForge)** | `config/BannedCore/`<br/>`config/WhiteListMod/` | `chat.json`, `license.json`, `waiting.json`, carpeta `Sequences/`<br/>`whitelist.json` |
+| **Servidor Plugin (Spigot/Paper)** | `plugins/BannedCore/` | `license.json`, `voice_mute.json`, carpeta `Sequences/` |
+| **Cliente Mod (.minecraft)** | `config/BannedCore/`<br/>`images/` | `indications.json`<br/>Almacenamiento local de texturas e imágenes (`{id}/header.png`, `{id}/row.png`, `waiting.png`) |
+
+---
+
+## Resumen de Módulos
+
+1. **Chat de Equipos y Colores Hex**: Formatos personalizados de chat por bando con soporte completo de parseo HEX y variables *(Exclusivo Servidor Mod)*.
+2. **Teletransporte por Área y Transiciones**: API y comandos `/tparea` y `/transition`.
+3. **Gestor de Secuencias**: Ejecución de acciones automatizadas mediante archivos `.txt` en `Sequences/`.
+4. **Tabla de Clasificación (Leaderboard)**: Interfaz dinámica con descarga de texturas por ID remota o local.
+5. **Indicaciones y Gestor de Espera**: Pantalla emergente informativa por API, regla `/gamerule waiting`, conteo de vivos en HUD y lista `/missing` *(Gestor de espera exclusivo Servidor Mod)*.
+6. **Bloqueo de Teclas (Suerte 100)**: Restricción de movimiento en vivo basada en amplificadores de efectos.
+7. **Silenciador de Voz (Plasmo Voice)**: Integración Addon para silenciar a los participantes manteniendo voz abierta a OP (`/voice_mute` / GameRule `mute`).

@@ -1,0 +1,53 @@
+---
+title: Tabla de Clasificación (Leaderboard)
+description: Interfaz visual dinámica de ránkings con soporte para descarga de texturas por ID web y local.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+El sistema de **Leaderboard** de Banned Core permite proyectar en pantalla una tabla de puntuación o clasificación totalmente personalizada con encabezado (`header.png`) y filas (`row.png`).
+
+---
+
+## Características Principales
+
+* **Relación de Aspecto Automática**: El motor cliente lee en tiempo real el ancho y alto exactos en píxeles de la imagen del encabezado y calcula automáticamente la proporción visual de la textura, evitando que la imagen se deforme o aplaste.
+* **Textura en Blanco por Defecto**: Al iniciar el juego, las texturas parten en blanco transparente por defecto sin realizar peticiones innecesarias a la red.
+* **Control de Visibilidad**: Si la orden enviada por el servidor especifica `visible = false`, el cliente oculta la tabla y **no realiza descargas ni lecturas** de imágenes.
+* **Descarga Asíncrona en Segundo Plano**: La descarga de imágenes web se ejecuta en segundo plano, evitando cualquier tirón o congelamiento de pantalla (`lag/stutter`) durante la partida.
+
+---
+
+## Flujo de Carga de Texturas por ID
+
+Cuando el servidor envía la información de la tabla con `visible = true` y una `id` nueva (por ejemplo `"evento"`), el cliente aplica la siguiente prioridad de búsqueda:
+
+1. **Remota (URL de Servidor Web)**:
+   * Header: `https://leaderboard.katito.xyz/{id}/header.png`
+   * Row: `https://leaderboard.katito.xyz/{id}/row.png`
+2. **Local (Almacenamiento en Cliente)**:
+   * Si la descarga web falla o no hay conexión a internet, busca localmente en:
+   * Header: `.minecraft/images/{id}/header.png`
+   * Row: `.minecraft/images/{id}/row.png`
+3. **Fallback en Blanco**:
+   * Si la textura no existe en la web ni en la carpeta local, permanece transparente de forma segura.
+
+---
+
+## API Java para Enviar la Tabla
+
+### En Servidor Mod (Fabric/Forge/NeoForge):
+```java
+import me.katto.bannedcore.BannedCore;
+
+// Enviar tabla con ID "evento", lista de líneas y visibilidad
+BannedCore.sendLeaderboard("evento", listaDeLineas, true, player);
+```
+
+### En Servidor Plugin (Spigot/Paper):
+```java
+import me.katto.bannedCore.BannedCore;
+
+// Enviar tabla con ID "evento", lista de líneas y visibilidad
+BannedCore.sendLeaderboard("evento", listaDeLineas, true, player);
+```

@@ -1,0 +1,118 @@
+---
+title: Indicaciones y Gestor de Espera
+description: Pantalla emergente de reglas por API Java, sistema de sala de espera con filtrado por Gamemode e indicador HUD para OP.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Banned Core proporciona dos sistemas clave para guiar a los participantes y gestionar la preparación previa de partidas.
+
+---
+
+## 1. Pantalla de Indicaciones (API Java)
+
+Permite proyectar una ventana emergente en la pantalla del cliente con el título de la modalidad, sección de controles de teclado e indicaciones de la partida.
+
+> **Nota**: Una de las dos listas (`controles` o `indicaciones`) es totalmente **opcional**. Si no deseas mostrar controles o indicaciones, puedes pasar una lista vacía `List.of()`.
+
+### Configuración de Color en Cliente (`indications.json`)
+El archivo de configuración se ubica exclusivamente en el **cliente del jugador** en `.minecraft/config/BannedCore/indications.json` y permite personalizar el color de acento de los títulos de la pantalla emergente. Acepta valores en formato **HEX de 6 u 8 dígitos** (RGB de 6 dígitos `#RRGGBB` o ARGB de 8 dígitos `#AARRGGBB` con transparencia/alfa):
+
+```json
+{
+  "color": "#FFFF78AA"
+}
+```
+
+### Invocación desde Código (API Java):
+
+#### En Servidor Mod (Fabric/Forge/NeoForge):
+```java
+import me.katto.bannedcore.BannedCore;
+
+String titulo = "BIENVENIDO AL EVENTO";
+List<String> controles = List.of("W/A/S/D - Moverse", "CLICK - Seleccionar");
+List<String> indicaciones = List.of("1. Completa los objetivos.", "2. El último en pie gana.");
+
+// Enviar pantalla al jugador (una de las dos listas puede ser vacía List.of())
+BannedCore.sendIndications(titulo, controles, indicaciones, player);
+```
+
+#### En Servidor Plugin (Spigot/Paper):
+```java
+import me.katto.bannedCore.BannedCore;
+
+String titulo = "BIENVENIDO AL EVENTO";
+List<String> controles = List.of("W/A/S/D - Moverse", "CLICK - Seleccionar");
+List<String> indicaciones = List.of("1. Completa los objetivos.", "2. El último en pie gana.");
+
+// Enviar pantalla al jugador (una de las dos listas puede ser vacía List.of())
+BannedCore.sendIndications(titulo, controles, indicaciones, player);
+```
+
+---
+
+## 2. Gestor de Espera y Whitelist
+
+:::note[Exclusivo de Servidor Mod]
+El sistema de Gestor de Espera, el archivo `waiting.json`, la regla de juego `/gamerule waiting` y el comando `/missing` son exclusivos de la versión de **Servidor Mod (Fabric/Forge/NeoForge)**.
+:::
+
+Administra la sala de espera pre-evento contando automáticamente cuántos jugadores vivos están conectados y cuántos faltan por ingresar.
+
+### Control de la Sala de Espera (`/gamerule waiting`)
+
+* **Activar sala de espera**:
+  ```bash
+  /gamerule waiting true
+  ```
+* **Desactivar sala de espera**:
+  ```bash
+  /gamerule waiting false
+  ```
+
+### Configuración de Modo de Juego (`waiting.json`)
+El archivo de configuración en `config/BannedCore/waiting.json` define qué modo de juego (`gamemode`) deben tener los jugadores para ser contados como participantes activos:
+
+```json
+{
+  "gamemode": "ADVENTURE"
+}
+```
+* **Valores aceptados**: `"ADVENTURE"`, `"SURVIVAL"`, `"CREATIVE"`, `"SPECTATOR"`.
+
+### Lectura de Whitelist
+El sistema consulta la lista de integrantes desde el archivo `config/WhiteListMod/whitelist.json`.
+
+---
+
+## Pantalla de Espera
+
+Cuando la sala de espera está activa (`/gamerule waiting true`), se despliega la pantalla de espera en el cliente de los jugadores comunes:
+
+* **Textura de Fondo**: Proyecta la imagen `.minecraft/images/waiting.png` cubriendo toda la pantalla.
+* **Textos Centrados**:
+  * **Título**: `"Esperando jugadores..."` (en tamaño grande).
+  * **Contador**: `"Jugadores: X/Y"` (donde X es la cantidad de jugadores conectados en el modo de juego configurado e Y es el total de la whitelist).
+* **Bloqueo de Tecla ESC**: La pantalla no se puede cerrar presionando la tecla Escape (`ESC`).
+* **Cierre de Emergencia para Administradores**: Un jugador con permisos de administrador (OP Nivel 4) puede cerrar la pantalla presionando la combinación de teclas **`CTRL + BACKSPACE`**.
+
+---
+
+## Comportamiento Visual: Jugador Común vs Administrador (OP)
+
+| Tipo de Jugador | Comportamiento en Juego |
+| :--- | :--- |
+| **Jugador Normal** | Si la regla de juego de espera está activa (`/gamerule waiting true`), se abre la pantalla de espera bloqueando la vista con los textos y la imagen `images/waiting.png`. |
+| **Administrador (OP Nivel 4)** | **No** se bloquea su pantalla con la pantalla de espera. En su lugar, se dibuja un texto HUD discreto en la **esquina inferior derecha**: `Jugadores Vivos: X/Y`. |
+
+---
+
+## Comando de Integrantes Faltantes (`/missing`)
+
+El comando `/missing` (disponible para administradores con permiso nivel 2 u OP) compara la whitelist con los jugadores conectados en el modo de juego configurado:
+
+```bash
+/missing
+```
+* Muestra en el chat la lista de nombres de jugadores whitelisted que aún no están conectados en el servidor.

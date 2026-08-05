@@ -1,0 +1,65 @@
+---
+title: Gestor de Secuencias
+description: Automatización de comandos temporizados mediante archivos .txt en la carpeta Sequences.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+El **Gestor de Secuencias** permite programar y ejecutar listas de comandos de consola con pausas de tiempo de forma totalmente automatizada mediante archivos `.txt`.
+
+---
+
+## Ubicación y Creación de Carpetas
+
+Al iniciar el servidor, Banned Core crea automáticamente la carpeta contenedora de secuencias:
+
+* **Servidor Mod (Fabric/Forge/NeoForge)**: `config/BannedCore/Sequences/`
+* **Servidor Plugin (Spigot/Paper)**: `plugins/BannedCore/Sequences/`
+
+---
+
+## Formato de los Archivos de Secuencia (`.txt`)
+
+Las secuencias se escriben en archivos de texto plano con extensión **`.txt`** (por ejemplo `inicio_evento.txt`).
+
+### Reglas de Formato:
+1. **Comandos sin barra (`/`)**: Escribe los comandos de la consola directamente (ej. `say ¡El evento va a comenzar!`).
+2. **Pausas de tiempo (`wait <segundos>`)**: Añade una línea con `wait` seguido del número de segundos de espera.
+3. **Comentarios (`#`)**: Las líneas vacías o que comiencen por `#` son ignoradas.
+
+### Ejemplo de Archivo (`config/BannedCore/Sequences/inicio_evento.txt`):
+
+```text
+# Mensaje inicial
+say ¡Atención a todos los jugadores!
+title @a title {"text":"¡PREPÁRENSE!","color":"red"}
+
+# Pausa de 3 segundos
+wait 3
+
+say 3...
+wait 1
+say 2...
+wait 1
+say 1...
+wait 1
+
+# Inicio y efecto
+say ¡A JUGAR!
+wait 1
+transition white @a 0 2 1
+```
+
+---
+
+## Comandos de Secuencia (`/sequences`)
+
+```bash
+/sequences list
+/sequences play <nombre>
+```
+
+### Explicación de Subcomandos:
+* `/sequences list`: Muestra en el chat la lista de todas las secuencias `.txt` disponibles en la carpeta.
+* `/sequences play <nombre>`: Ejecuta la secuencia especificada (solo colocas el nombre sin la extensión `.txt`).
+  * **Ejemplo**: `/sequences play inicio_evento`

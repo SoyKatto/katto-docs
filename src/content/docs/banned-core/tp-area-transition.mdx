@@ -1,0 +1,72 @@
+---
+title: TP por Área y Transiciones
+description: Guía de uso para teletransporte aleatorio por caja 3D y comando de transiciones visuales.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Banned Core incluye comandos y métodos de API para teletransportar grupos de jugadores dentro de volúmenes 3D y ejecutar transiciones de pantalla a color.
+
+---
+
+## 1. Teletransporte por Área (`/tparea` / API)
+
+El comando `/tparea` toma una lista de jugadores y dos coordenadas tridimensionales (`pos1` y `pos2`). Al ejecutarse, asigna a cada jugador una ubicación **X/Z aleatoria** dentro de los límites del área manteniendo la altura fija de `pos1`.
+
+### Sintaxis del Comando:
+```bash
+/tparea <jugadores> <pos1> <pos2>
+```
+
+* **Ejemplo**: `/tparea @a 100 64 100 200 64 200`
+  * Distribuye aleatoriamente a todos los jugadores entre X: 100..200 y Z: 100..200 a la altura Y: 64 de `pos1`.
+
+### Método API Java (Para Desarrolladores)
+
+Tanto en Servidor Mod como en Servidor Plugin, existen métodos estáticos públicos para invocar el teletransporte directamente desde tu código:
+
+#### En Servidor Mod (Fabric/Forge/NeoForge):
+```java
+import me.katto.bannedcore.commands.TpAreaCommand;
+
+// Teletransporta aleatoriamente a la lista de jugadores dentro del volumen
+TpAreaCommand.teleportArea(jugadores, pos1, pos2);
+// Alias corto
+TpAreaCommand.tpArea(jugadores, pos1, pos2);
+```
+
+#### En Servidor Plugin (Spigot/Paper):
+```java
+import me.katto.bannedCore.commands.TpAreaCommand;
+
+// Teletransporta aleatoriamente a la lista de jugadores dentro del volumen
+TpAreaCommand.teleportArea(jugadores, pos1, pos2);
+// Alias corto
+TpAreaCommand.tpArea(jugadores, pos1, pos2);
+```
+
+---
+
+## 2. Efectos de Transición (`/transition`)
+
+El comando `/transition` proyecta un efecto de transición de pantalla a color (blanco o negro) utilizando los símbolos e íconos del sistema cliente.
+
+### Sintaxis del Comando:
+```bash
+/transition <color> <jugadores> <fadeIn> <duration> <fadeOut>
+```
+
+### Argumentos del Comando:
+* `color`: El color del efecto. Opciones disponibles con sugerencia automática:
+  * `white`: Transición en blanco.
+  * `black`: Transición en negro.
+* `jugadores`: El selector de jugadores objetivo (ej. `@a` o nombre).
+* `fadeIn`: Tiempo de entrada del efecto en **segundos**.
+* `duration`: Tiempo de permanencia en pantalla en **segundos**.
+* `fadeOut`: Tiempo de salida del efecto en **segundos**.
+
+### Ejemplo de Uso:
+```bash
+/transition black @a 1 3 1
+```
+* Aplica una transición en negro para todos los jugadores con 1 segundo de entrada (`fadeIn`), 3 segundos de permanencia (`duration`) y 1 segundo de salida (`fadeOut`).
