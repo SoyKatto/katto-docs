@@ -1,0 +1,77 @@
+---
+title: ¿Qué es e Instalación?
+description: Qué es CatoCinema, versiones compatibles, requisitos e instalación como mod o como plugin.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+**CatoCinema** es un sistema de cinemáticas para Minecraft. Permite crear escenas con movimientos de cámara, actores animados, efectos del mundo, sonido, música, subtítulos y efectos de pantalla, todo editado **en tiempo real dentro del juego** con un editor visual.
+
+Las escenas se guardan en el servidor y se reproducen sincronizadas para todos los espectadores.
+
+---
+
+## ¿Qué puede hacer?
+
+* **Cámara cinematográfica**: recorridos con keyframes, curvas suaves, FOV, inclinación (roll), órbitas, seguimiento de actores, planos POV y temblores.
+* **Actores**: jugadores reales, entidades del mundo, entidades generadas para la escena, **NPCs** con el nombre y la skin de cualquier jugador (aunque no esté en el servidor) o **modelos de Blockbench** (`.bbmodel`) con sus animaciones.
+* **Acciones de actores**: caminar por rutas, agacharse, sentarse, poses, golpear, equipar objetos, armaduras, cambiar skin, emociones y diálogos con máquina de escribir y voz.
+* **Mundo**: rayos, explosiones, fuegos artificiales, bloques temporales, rellenos, partículas, hora, clima, teletransportes y comandos.
+* **Audio**: sonidos de Minecraft, presets de efectos, música, ambientes en bucle, ecos, silencio y efecto "apagado".
+* **Pantalla**: subtítulos, títulos, fundidos, viñetas, barras de cine, imágenes y GIFs, transiciones, partículas en pantalla, textos animados y mucho más.
+* **Automatización**: disparadores por zona, por conexión o por logro, encadenado de escenas y API para desarrolladores.
+
+---
+
+## Versiones y Loaders Compatibles
+
+| Plataforma | Versiones de Minecraft |
+| :--- | :--- |
+| **Fabric** | 1.20.1, 1.21.1, 1.21.2, 1.21.6, 1.21.11, 26.1, 26.2 |
+| **NeoForge** | 1.21.1, 1.21.2, 1.21.6, 1.21.11, 26.1, 26.2 |
+| **Forge** | 1.20.1 |
+| **Plugin (Spigot / Paper)** | Servidor 1.20+ |
+
+---
+
+## Requisitos
+
+* **CatoAPI**: es obligatorio tanto en el mod como en el plugin.
+* **Fabric**: además necesita **Fabric API**.
+* **Clientes**: cada jugador que vaya a **ver** una cinemática o **abrir el editor** necesita tener el **mod CatoCinema** instalado en su cliente (con CatoAPI).
+
+---
+
+## Instalación
+
+### Como Mod (servidor de mods o un jugador)
+
+1. Coloca `CatoCinema` y `CatoAPI` (y `Fabric API` en Fabric) en la carpeta `mods/` del **servidor**.
+2. Coloca los mismos archivos en la carpeta `mods/` de **cada jugador**.
+3. Inicia el servidor. CatoCinema creará su carpeta de datos automáticamente.
+
+### Como Plugin (Spigot / Paper)
+
+1. Coloca el plugin `CatoCinema` y `CatoAPI` en la carpeta `plugins/` del servidor.
+2. Los jugadores instalan el **mod CatoCinema** en su cliente para poder ver las escenas y usar el editor.
+3. Reinicia el servidor.
+
+<Aside type="tip">
+También funciona en un mundo de un solo jugador: instala el mod normalmente y usa los comandos con los trucos activados.
+</Aside>
+
+---
+
+## Carpetas y Archivos
+
+| Contenido | Mod (servidor) | Plugin |
+| :--- | :--- | :--- |
+| **Escenas** (`.json`) | `config/CatoCinema/scenes/` | `plugins/CatoCinema/scenes/` |
+| **Assets** (audio e imágenes) | `config/CatoCinema/assets/` | `plugins/CatoCinema/assets/` |
+| **Disparadores** | `config/CatoCinema/triggers.json` | `plugins/CatoCinema/triggers.json` |
+
+En el **cliente**, los assets descargados se guardan en caché en `.minecraft/catocinema/assets/`, así que solo se descargan una vez.
+
+<Aside>
+No hace falta editar los `.json` a mano: todo se crea y modifica desde el editor y los comandos. Aun así, puedes copiar escenas entre servidores copiando sus archivos.
+</Aside>

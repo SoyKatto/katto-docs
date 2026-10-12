@@ -18,6 +18,20 @@ export default defineConfig({
 					slug: '',
 				},
 				{
+					label: 'CatoCinema',
+					items: [
+						{ label: '¿Qué es e Instalación?', slug: 'catocinema/overview' },
+						{ label: 'Comandos y Permisos', slug: 'catocinema/commands' },
+						{ label: 'El Editor', slug: 'catocinema/editor' },
+						{ label: 'Ajustes de Escena y Cámara', slug: 'catocinema/scenes' },
+						{ label: 'Actores', slug: 'catocinema/actors' },
+						{ label: 'Referencia de Clips', slug: 'catocinema/clips' },
+						{ label: 'Assets (Audio e Imágenes)', slug: 'catocinema/assets' },
+						{ label: 'Disparadores', slug: 'catocinema/triggers' },
+						{ label: 'API para Desarrolladores', slug: 'catocinema/api' },
+					],
+				},
+				{
 					label: 'Common Utils',
 					items: [
 						{ label: '¿Qué es y Diferencias?', slug: 'common-utils/overview' },

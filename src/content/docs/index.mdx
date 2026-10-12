@@ -1,14 +1,18 @@
 ---
 title: Katto Docs
-description: Centro oficial de documentación y guías sencillas para los mods y plugins de Katto.
+description: Centro oficial de documentación y guías sencillas para los mods y plugins de Katto, incluido CatoCinema.
 template: splash
 hero:
   tagline: Centro oficial de guías sencillas, configuración y manuales para administrar los mods y plugins creados por Katto.
   actions:
+    - text: Guía de CatoCinema
+      link: /catocinema/overview/
+      icon: right-arrow
+      variant: primary
     - text: Empezar con Common Utils
       link: /common-utils/overview/
       icon: right-arrow
-      variant: primary
+      variant: secondary
     - text: Guía de Banned Core
       link: /banned-core/overview/
       icon: right-arrow
@@ -16,6 +20,40 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Guías de CatoCinema
+
+<CardGrid stagger>
+	<Card title="¿Qué es e Instalación?" icon="open-book">
+		Qué hace CatoCinema, versiones y loaders compatibles, requisitos y dónde se guardan las escenas.
+	</Card>
+	<Card title="Comandos y Permisos" icon="document">
+		Reproduce, detén, edita, copia y borra escenas desde el chat o la consola.
+	</Card>
+	<Card title="El Editor" icon="pencil">
+		Interfaz, controles, atajos, timeline, gizmos, selección múltiple y grabación de movimiento.
+	</Card>
+	<Card title="Ajustes de Escena y Cámara" icon="setting">
+		Duración, barras de cine, modo de espectador, saltos, invulnerabilidad, encadenado y keyframes de cámara.
+	</Card>
+	<Card title="Actores" icon="star">
+		Usa jugadores, entidades, NPCs con skin propia o modelos de Blockbench y anímalos con keyframes, acciones y animaciones.
+	</Card>
+	<Card title="Referencia de Clips" icon="list-format">
+		Todos los clips de planos, mundo, audio, subtítulos y efectos visuales con sus opciones.
+	</Card>
+	<Card title="Assets (Audio e Imágenes)" icon="laptop">
+		Usa tus propios .mp3, .ogg, .wav, .png, .jpg y .gif sin que los jugadores descarguen nada a mano.
+	</Card>
+	<Card title="Disparadores" icon="rocket">
+		Lanza escenas automáticamente al entrar en una zona, al conectarse o al conseguir un logro.
+	</Card>
+	<Card title="API para Desarrolladores" icon="puzzle">
+		Controla CatoCinema desde tu propio mod o plugin y escucha sus eventos.
+	</Card>
+</CardGrid>
+
+---
 
 ## Módulos de Banned Core
 

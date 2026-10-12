@@ -1,0 +1,155 @@
+---
+title: Referencia de Clips
+description: Todos los clips disponibles en CatoCinema por pista, con lo que hacen y sus opciones.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Un **clip** es un bloque en la timeline que hace algo durante un tiempo (o en un instante). Se añaden con **clic derecho en una pista**, la tecla **A** o el botón **Añadir**.
+
+* Los clips **instantáneos** (duración 0) ocurren una sola vez al pasar el cabezal por ellos.
+* Casi todos los efectos tienen **Fade in / Fade out** para entrar y salir suavemente.
+* Los clips con **posición** se pueden mover con el gizmo en el visor. Los botones **⌖** y **☺** toman la posición de la cámara libre o de tu jugador.
+* Si un clip tiene un **actor** asignado, usa la posición de ese actor en vez de la posición fija.
+
+<Aside>
+Los textos admiten colores con `&` (ej. `&c`, `&l`, `&#FF8800`) y saltos de línea con `;` o `\n` (usa `\;` para un `;` literal).
+</Aside>
+
+---
+
+## Planos
+
+Clips de cámara que tienen prioridad sobre los keyframes mientras están activos. **Blend** es el tiempo de transición al entrar y salir.
+
+| Clip | ¿Qué hace? | Opciones principales |
+| :--- | :--- | :--- |
+| **Órbita** | Gira alrededor de un actor o un punto. | Radio, altura, ángulo inicial y final, curva. |
+| **Seguir** | Sigue a un actor desde detrás. | Distancia, altura, desplazamiento lateral y de yaw, mirar al actor. |
+| **POV** | Vista en primera persona de un actor. | Actor. |
+| **Mirar a** | La cámara apunta a un actor o punto sin moverse. | Desplazamiento de altura. |
+| **Temblor** | Sacude la cámara. | Intensidad, frecuencia, fundidos. |
+| **Zoom** | Cambia el FOV de forma animada. | FOV inicial y final, curva. |
+
+---
+
+## Mundo
+
+Estos clips actúan **en el servidor**, así que todos los jugadores los ven (no solo los espectadores), salvo las partículas.
+
+| Clip | ¿Qué hace? | Opciones principales |
+| :--- | :--- | :--- |
+| **Rayo** | Cae un rayo. | Daño real (por defecto solo visual). |
+| **Teletransporte** | Teletransporta a los espectadores (`@viewers`) o a un actor. | Posición, yaw y pitch. |
+| **Comando** | Ejecuta un comando como el servidor. | `{viewer}` se sustituye por el nombre de cada espectador; **Una vez por espectador**. |
+| **Hora** | Cambia la hora del mundo. | Hora en ticks (ej. `6000` mediodía, `18000` medianoche). |
+| **Clima** | Cambia el clima. | `CLEAR`, `RAIN` o `THUNDER`. |
+| **Explosión** | Crea una explosión. | Potencia, romper bloques, fuego. |
+| **Bloque** | Coloca o rompe un bloque. | Bloque, colocar/romper, efectos, **restaurar al final**. |
+| **Rellenar** | Rellena una zona con un bloque. | Esquinas inicial y final, bloque, efectos, **restaurar al final**. |
+| **Fuegos artificiales** | Lanza fuegos artificiales. | Forma, color, color de desvanecido, altura de vuelo, estela, destello, cantidad y dispersión. |
+| **Evento (API)** | No hace nada visible: avisa a otros mods o plugins. | Nombre y datos. Ver [API](/catocinema/api/). |
+| **Partículas** | Emite partículas (solo para los espectadores). | Partícula, cantidad, dispersión, velocidad; opcionalmente **moverse** hasta un punto final con curva. |
+
+<Aside type="tip">
+Con **Restaurar al final** los bloques vuelven a como estaban cuando termina la escena, así puedes destruir o construir cosas solo para la cinemática. Si el servidor se cae en mitad de la escena, se restauran al volver a arrancar. Los cofres y demás contenedores recuperan su contenido, y al romperlos durante la escena no sueltan los objetos al suelo.
+</Aside>
+
+---
+
+## Audio
+
+| Clip | ¿Qué hace? | Opciones principales |
+| :--- | :--- | :--- |
+| **Sonido** | Reproduce un sonido de Minecraft, un [asset](/catocinema/assets/) o un **preset**. | Volumen, tono, origen (cámara, posición o actor), categoría, bucle, fundidos, **ecos** (cantidad, retardo y caída) y **variación aleatoria**. |
+| **Música** | Música de fondo. | Sonido o asset, volumen, tono, bucle, fundidos. |
+| **Ambiente** | Sonido ambiental en bucle. | Cueva, nether, basalto, carmesí, distorsionado, valle de almas, bajo el agua, lluvia, viento, fuego, lava, agua, portal, faro, conducto. |
+| **Apagado** | Baja el volumen y el tono de los sonidos del mundo. | Cantidad (0-1), tono, fundidos. |
+| **Silencio** | Enmudece los sonidos del mundo. | Fundidos. |
+
+**Apagado** y **Silencio** no afectan a los sonidos de la propia cinemática (sonidos, música, ambientes, assets y voces).
+
+Los clips de audio muestran su **forma de onda** en la timeline. En los sonidos instantáneos, la onda se extiende para indicar cuánto dura el sonido.
+
+### Presets de Sonido
+
+Los presets combinan varios sonidos de Minecraft con retardos. Pulsa **▶ Escuchar** en el inspector para probarlos.
+
+| Categoría | Presets |
+| :--- | :--- |
+| **Impactos y acción** | `WHOOSH`, `BOOM`, `IMPACT`, `THUNDER`, `SWORD`, `HIT`, `PUNCH`, `SHIELD`, `ARROW`, `FALL`, `EQUIP`, `GLASS` |
+| **Ambiente y objetos** | `DOOR`, `IRON_DOOR`, `KNOCK`, `CHEST`, `STEPS`, `RUN`, `GALLOP`, `PISTON`, `SPLASH`, `FIRE`, `EXTINGUISH`, `RUMBLE`, `WIND` |
+| **Magia y energía** | `MAGIC`, `TELEPORT`, `PORTAL`, `SUMMON`, `POWER_UP`, `POWER_DOWN`, `HEAL`, `TOTEM`, `FREEZE`, `FIREWORKS`, `LEVEL_UP` |
+| **Tensión y terror** | `HEARTBEAT`, `RISER`, `DRAMATIC`, `SUSPENSE`, `HORROR`, `SCREAM`, `SHRIEK`, `SONIC_BOOM`, `ROAR`, `WITHER`, `GLITCH`, `ALARM` |
+| **Interfaz** | `SUCCESS`, `FAIL`, `CLICK`, `COIN`, `POP`, `BELL`, `CHIME`, `GONG`, `TYPE` |
+| **Comida** | `EAT`, `DRINK` |
+| **Stingers musicales** | `DUN_DUN`, `REVEAL`, `VICTORY`, `DEFEAT`, `MYSTERY`, `TENSION`, `COMEDY` |
+| **Voces** | `VILLAGER_TALK`, `PIGLIN`, `ILLAGER`, `WANDERER`, `WITCH` |
+
+---
+
+## Subtítulos
+
+| Clip | ¿Qué hace? | Opciones principales |
+| :--- | :--- | :--- |
+| **Subtítulo** | Texto en la parte inferior, superior o central. | Texto, hablante y su color, color, posición, **alineación**, estilo (caja, sombra o nada), **opacidad del fondo**, **franja de color**, escala, máquina de escribir, sonido de tecleo, fundidos. |
+| **Título** | Texto grande centrado con subtítulo opcional. | Texto, subtítulo, color, escala, fundidos. |
+
+Los textos que no caben en su espacio se desplazan automáticamente para poder leerse completos.
+
+---
+
+## Efectos Visuales (VFX)
+
+### Básicos
+
+| Clip | ¿Qué hace? |
+| :--- | :--- |
+| **Imagen** | Muestra una imagen o GIF de los [assets](/catocinema/assets/). Posición, tamaño, opacidad, velocidad, bucle y si va por encima de las barras de cine. |
+| **Fundido** | Funde la pantalla a un color (de una opacidad a otra, con curva). |
+| **Destello** | Destello rápido de color. |
+| **Viñeta** | Oscurece (o colorea) los bordes. |
+| **Barras de cine** | Barras negras arriba y abajo, animadas. |
+| **Barras laterales** | Barras negras a los lados, animadas. |
+| **Tinte** | Tiñe toda la pantalla de un color. |
+| **Degradado** | Un color arriba y otro abajo (atardeceres, ambientes). |
+| **Grano** | Ruido de película. |
+| **Líneas** | Líneas de escaneo tipo monitor antiguo. |
+| **Post-shader** | Aplica un shader de Minecraft (`creeper`, `spider`, `invert`, `blur`, según la versión). |
+
+### Transiciones
+
+| Clip | ¿Qué hace? |
+| :--- | :--- |
+| **Iris** | Un círculo que se cierra o se abre sobre un punto de la pantalla. |
+| **Barrido** | Cubre o descubre la pantalla en una dirección, con borde suave. |
+| **Parpadeo** | Párpados que se cierran y abren las veces que quieras. |
+
+### Ambiente y Estilo
+
+| Clip | ¿Qué hace? |
+| :--- | :--- |
+| **Pulso** | Latido de color en los bordes o en toda la pantalla (daño, tensión). |
+| **Parpadeo de luz** | Oscurecimientos aleatorios, como una luz que falla. |
+| **Partículas en pantalla** | Nieve, lluvia, polvo, brasas, pétalos o ceniza sobre la pantalla, con viento. |
+| **Película antigua** | Sepia, rayas, motas, parpadeo y viñeta. |
+| **Interferencia** | Glitch con franjas desplazadas, bloques de color y bordes RGB. |
+| **Rayos de luz** | Rayos difusos desde un punto, con ángulo y cantidad configurables. |
+| **Destello de lente** | Brillo con halos que sigue un punto del mundo o un actor y se oculta si algo lo tapa. |
+| **Gotas en la lente** | Gotas de agua en la "cámara" que resbalan. |
+| **Escarcha / quemado** | Borde helado con cristales o borde quemado con brasas. |
+| **Mira / prismáticos** | Máscara de mira telescópica con retícula o de prismáticos. |
+| **Videocámara** | Esquinas de encuadre, "REC" parpadeante y contador de tiempo. |
+| **Pantalla dividida** | Un panel con color o imagen que entra por un lado. |
+
+### Texto en Pantalla
+
+| Clip | ¿Qué hace? |
+| :--- | :--- |
+| **Texto animado** | Texto con animación `POP`, `BOUNCE`, `SLIDE`, créditos que suben (`CREDITS`) o cartel de lugar (`LOCATION`). |
+| **Cuenta atrás** | Números grandes 3-2-1 con texto final opcional y pitido por número. |
+| **Carta de personaje** | Barra que entra deslizándose con el nombre de un actor y su rol. |
+
+<Aside type="tip">
+Los efectos con aleatoriedad (grano aparte) dependen del tiempo de la escena, así que en el editor se ven exactamente igual cada vez que mueves el cabezal.
+</Aside>

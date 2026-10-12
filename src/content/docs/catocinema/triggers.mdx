@@ -1,0 +1,59 @@
+---
+title: Disparadores
+description: Reproduce escenas automáticamente al entrar en una zona, al conectarse o al conseguir un logro.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Los **disparadores** reproducen una escena automáticamente para un jugador cuando ocurre algo. Se guardan en `triggers.json` y se mantienen tras reiniciar el servidor.
+
+Cada disparador tiene un **ID** (minúsculas, números, `_` y `-`, hasta 32 caracteres) y la **escena** que reproduce.
+
+---
+
+## Tipos de Disparador
+
+### Zona (`region`)
+
+Se activa cuando un jugador **entra** en una zona 3D.
+
+1. Ve a una esquina de la zona y usa `/cinema trigger pos1`.
+2. Ve a la esquina opuesta y usa `/cinema trigger pos2`.
+3. Crea el disparador:
+   ```bash
+   /cinema trigger region entrada_castillo intro_castillo
+   ```
+
+La zona queda ligada al mundo/dimensión donde la marcaste. Para que se vuelva a activar, el jugador debe salir de la zona y volver a entrar.
+
+### Conexión (`join`)
+
+Se activa poco después de que un jugador **se conecte** (unos 2 segundos, para que termine de cargar).
+
+```bash
+/cinema trigger join bienvenida intro_servidor
+```
+
+### Logro (`advancement`)
+
+Se activa cuando un jugador **consigue un logro** (avance).
+
+```bash
+/cinema trigger advancement nether entrada_nether minecraft:story/enter_the_nether
+```
+
+---
+
+## Gestionar Disparadores
+
+| Comando | ¿Qué hace? |
+| :--- | :--- |
+| `/cinema trigger once <id> <true/false>` | `true` (por defecto): cada jugador lo ve **una sola vez**. `false`: se repite cada vez. |
+| `/cinema trigger enable <id> <true/false>` | Activa o desactiva el disparador sin borrarlo. |
+| `/cinema trigger reset <id>` | Olvida qué jugadores ya lo vieron (vuelven a verlo una vez). |
+| `/cinema trigger remove <id>` | Borra el disparador. |
+| `/cinema trigger list` | Lista todos los disparadores con su tipo, escena y estado. |
+
+<Aside>
+Un disparador nunca interrumpe una cinemática: si el jugador ya está viendo una escena, se ignora.
+</Aside>

@@ -1,0 +1,57 @@
+---
+title: Assets (Audio e Imágenes)
+description: Cómo usar tus propios audios, imágenes y GIFs en las cinemáticas de CatoCinema.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Los **assets** son archivos propios (música, voces, efectos, imágenes, logos, GIFs o modelos de Blockbench) que puedes usar en tus escenas. Se guardan **solo en el servidor** y CatoCinema los envía automáticamente a cada jugador cuando los necesita.
+
+---
+
+## Dónde Ponerlos
+
+| Plataforma | Carpeta |
+| :--- | :--- |
+| **Mod** | `config/CatoCinema/assets/` |
+| **Plugin** | `plugins/CatoCinema/assets/` |
+
+Puedes organizarlos en **subcarpetas** (ej. `assets/voces/intro.ogg`). No hace falta reiniciar: los archivos nuevos o modificados se detectan solos. Con `/cinema assets` ves la lista y el tamaño de cada uno.
+
+---
+
+## Formatos Soportados
+
+| Tipo | Formatos | Se usa en |
+| :--- | :--- | :--- |
+| **Audio** | `.mp3`, `.ogg`, `.wav` | Clips **Sonido** y **Música** |
+| **Imagen** | `.png`, `.jpg`, `.jpeg` | Clips **Imagen** y **Pantalla dividida** |
+| **Animación** | `.gif` | Clips **Imagen** y **Pantalla dividida** |
+| **Modelo** | `.bbmodel` (Blockbench) | Actores con origen `MODEL` |
+
+El tamaño máximo por archivo es de **32 MB**.
+
+---
+
+## Cómo Usarlos en el Editor
+
+* **Audio**: en el campo **Sonido** de un clip de Sonido o Música, los assets aparecen en las sugerencias con el prefijo `asset:` (ej. `asset:voces/intro.ogg`).
+* **Imágenes y GIFs**: en el campo **Imagen** aparecen directamente por su nombre (ej. `logo.png`).
+* **Modelos**: en la **Referencia** de un actor con origen `MODEL` aparecen por su nombre (ej. `modelos/dragon.bbmodel`). Ver [Modelos de Blockbench](/catocinema/actors/#modelos-de-blockbench-bbmodel).
+
+### GIFs
+
+* Se reproducen con su velocidad original multiplicada por la opción **Velocidad** del clip.
+* Si **Bucle** está desactivado, el clip no puede durar más que el GIF (ajustado a la velocidad): el editor lo recorta automáticamente.
+
+---
+
+## ¿Cómo Llegan a los Jugadores?
+
+1. Al reproducir una escena (o abrir el editor), el servidor indica qué assets usa.
+2. Cada jugador descarga solo los que **no tiene ya** en su caché (`.minecraft/catocinema/assets/`).
+3. Si cambias un archivo en el servidor, los jugadores descargan la versión nueva automáticamente.
+
+<Aside type="tip">
+Los assets se precargan al empezar la escena. Para audios largos o muchos GIFs, la primera vez que un jugador ve la escena puede tardar un momento en tenerlos todos; las siguientes veces ya están en caché.
+</Aside>

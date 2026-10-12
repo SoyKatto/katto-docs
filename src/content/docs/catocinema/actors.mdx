@@ -1,0 +1,139 @@
+---
+title: Actores
+description: Cómo añadir actores a una escena, tipos de actor, keyframes de movimiento y acciones.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Un **actor** es cualquier personaje o entidad que participa en la escena: un jugador, un mob del mundo, una entidad creada para la escena, un NPC con la skin de un jugador o un modelo de Blockbench (`.bbmodel`) con sus animaciones.
+
+Créalo con **Añadir actor** (o la tecla **N**) y configúralo en el inspector.
+
+---
+
+## Tipos de Actor (Origen)
+
+| Origen | Referencia | ¿Qué es? |
+| :--- | :--- | :--- |
+| `PLAYER` | Nombre de jugador o `@viewer` | Un jugador conectado. `@viewer` es el primer espectador de la escena. Con varios espectadores, es el primero de la lista (normalmente quien lanzó la escena o activó el disparador). |
+| `UUID` | UUID de la entidad | Una entidad concreta que ya existe en el mundo. |
+| `TAG` | Etiqueta de `/tag` | La entidad del mundo que tenga esa etiqueta. |
+| `SPAWN` | ID de entidad (ej. `minecraft:zombie`) | Se crea al empezar la escena y se elimina al terminar. |
+| `NPC` | Nombre de jugador | Un jugador falso que **solo existe para los espectadores**, con el nombre y la skin (incluida la segunda capa) de ese jugador, aunque no esté en el servidor. |
+| `MODEL` | Archivo `.bbmodel` de los [assets](/catocinema/assets/) | Un modelo de **Blockbench** que **solo existe para los espectadores**, con sus texturas y animaciones. Ver [Modelos de Blockbench](#modelos-de-blockbench-bbmodel). |
+
+### Opciones del Actor
+
+| Opción | Descripción |
+| :--- | :--- |
+| **Nombre** | Nombre del actor en el editor. |
+| **Controlar movimiento** | Si está activo, el actor sigue sus keyframes. |
+| **Restaurar posición** | Al terminar, el actor vuelve a donde estaba. |
+| **Nombre visible** | Para `SPAWN`, el nombre que lleva la entidad creada. Para `NPC`, el nombre que se muestra sobre su cabeza (si está vacío se usa el de la skin). |
+| **Ocultar nombre** | Los espectadores no ven el nombre sobre la cabeza del actor durante la escena (también en la vista previa del editor). Sirve para jugadores, mobs con nombre y NPC. |
+| **Escala del modelo** | Solo `MODEL`: tamaño del modelo (`1` = tamaño original de Blockbench). |
+| **Animación en reposo** | Solo `MODEL`: animación que se repite cuando el actor está quieto. |
+| **Animación al caminar** | Solo `MODEL`: animación que se repite mientras el actor se desplaza; se mezcla suavemente con la de reposo según la velocidad. |
+| **Color** | Color del actor en la timeline y en el visor. |
+
+### Jugadores como Actores
+
+* Mientras un jugador sigue keyframes, se le pone a **volar** y, si estaba en supervivencia, en **modo aventura**, para que no caiga ni rompa bloques. Al terminar recupera su modo de juego y su vuelo.
+* Si se desconecta en mitad de la escena, al volver a entrar se le devuelve a su estado y posición originales.
+* Si el mismo jugador o entidad ya está siendo usado por otra escena en curso, esta escena no lo mueve ni lo modifica (solo lo muestra) hasta que la otra termine.
+
+<Aside>
+Las entidades reales vuelven a su estado original al terminar la escena (posición, invulnerabilidad, etc.). Los NPC y los modelos no afectan al servidor de ninguna forma.
+</Aside>
+
+---
+
+## Movimiento con Keyframes
+
+Cada actor tiene su propia pista de keyframes, igual que la cámara:
+
+* **I** (con el actor seleccionado) inserta un keyframe en la posición de la cámara libre.
+* **Shift+I** inserta un keyframe en la posición de **tu jugador**.
+* **Ctrl+R** graba tu movimiento real como keyframes del actor (ver [Grabación de Movimiento](/catocinema/editor/#grabación-de-movimiento)).
+
+Entre keyframes el actor camina con su animación de andar, gira el cuerpo y la cabeza hacia donde mira. En el visor verás una **línea de dirección** sobre cada actor que indica hacia dónde mira.
+
+---
+
+## Acciones (Pista "Acciones")
+
+Debajo de cada actor hay una pista de **Acciones**. Clic derecho en ella para añadir:
+
+| Acción | ¿Qué hace? | Opciones |
+| :--- | :--- | :--- |
+| **Golpear** (`SWING`) | Mueve el brazo como al golpear. | Mano principal o secundaria. |
+| **Agacharse** (`SNEAK`) | El actor se agacha durante el clip. | — |
+| **Sentarse** (`SIT`) | Se sienta en el sitio. | Altura. |
+| **Brillar** (`GLOW`) | Contorno brillante. | — |
+| **Invisible** (`INVISIBLE`) | El actor se vuelve invisible. | — |
+| **Daño** (`HURT`) | Animación de recibir daño (sin hacer daño real). | — |
+| **Pose** (`POSE`) | Fuerza una pose. | De pie, agachado, dormido, nadando, planeando con élitros, ataque giratorio, sentado, rugiendo, muriendo. |
+| **Mirar** (`LOOK`) | Gira la cabeza para mirar a otro actor o a la cámara. | Objetivo (`@camera` o un actor). |
+| **Equipar** (`EQUIP`) | Le pone un objeto en una ranura. | Ranura (manos, cabeza, pecho, piernas, pies) e ID del objeto. |
+| **Armadura** (`OUTFIT`) | Viste una armadura completa. | Cuero, malla, hierro, oro, diamante, netherita o ninguna. |
+| **Skin** (`SKIN`) | Cambia la skin del actor por la de otro jugador. | Nombre del jugador. |
+| **Emoción** (`EMOTE`) | Partículas sobre la cabeza. | Corazón, enfadado, feliz, nota, humo, llama, crítico, alma, nube, chispa; cantidad. |
+| **Decir** (`SAY`) | Diálogo del actor: aparece como subtítulo con su nombre y color. | Texto, color, alineación, máquina de escribir, sonido de tecleo y **voz**. |
+| **Animación** (`ANIMATION`) | Solo `MODEL`: reproduce una animación del `.bbmodel`. | Animación, velocidad, bucle, modo y fundidos. Ver [Animaciones del modelo](#animaciones-del-modelo). |
+
+### Diálogos (Decir)
+
+* El texto admite **códigos de color** con `&` (ej. `&c`, `&l`) y colores hex `&#RRGGBB`.
+* Los saltos de línea se hacen con `;` o `\n`. Para escribir un `;` literal usa `\;`.
+* **Máquina de escribir**: letras por segundo (`0` muestra todo de golpe).
+* **Voz**: el actor "murmura" mientras habla con la voz de un aldeano, piglin, illager, comerciante, bruja, allay, gólem o blaze, desde su posición.
+
+---
+
+## Modelos de Blockbench (`.bbmodel`)
+
+Con el origen `MODEL` el actor se dibuja con un modelo hecho en [Blockbench](https://www.blockbench.net/) en vez de con un jugador o un mob.
+
+1. Guarda el proyecto en Blockbench (**Archivo → Guardar proyecto**) para obtener el archivo `.bbmodel`.
+2. Cópialo a la carpeta de [assets](/catocinema/assets/) del servidor (ej. `assets/modelos/dragon.bbmodel`).
+3. Crea un actor, pon el origen en `MODEL` y elige el archivo en **Referencia** (aparece en las sugerencias).
+4. Añádele keyframes: igual que los NPC, el modelo aparece en cuanto el actor tiene al menos un keyframe.
+
+Debajo de las opciones verás cuántos huesos y animaciones tiene el modelo, o un aviso si el archivo no está en el servidor.
+
+### Qué se Admite
+
+* **Cubos** (con rotación, inflado y rotación de UV por cara) y **mallas** (caras de 3 o 4 vértices).
+* **Grupos/huesos** con su punto de pivote y rotación, anidados a cualquier profundidad.
+* **Varias texturas** por modelo. Deben estar **incrustadas** en el `.bbmodel` (es lo normal al guardar el proyecto). Las transparencias se respetan.
+* Formatos **Bedrock**, **Genérico (free)** y **Bloque/Objeto Java**. Los modelos de bloque se centran automáticamente.
+* Si el modelo tiene un hueso llamado **`head`**, gira con la mirada del actor (keyframes y la acción **Mirar**).
+
+El modelo mira hacia el **norte** de Blockbench: ese es el frente del actor.
+
+<Aside type="caution">
+No se dibujan localizadores, cámaras, texturas que no estén incrustadas ni las partes ocultas o marcadas para no exportarse. Los efectos de partículas y sonidos de las animaciones se ignoran.
+</Aside>
+
+### Animaciones del Modelo
+
+Todas las animaciones del `.bbmodel` están disponibles. Se usan de dos formas:
+
+* **Automáticas**: en las opciones del actor eliges una **animación en reposo** y otra **al caminar**. Se reproducen en bucle y pasan de una a otra según lo rápido que se mueva el actor entre keyframes.
+* **Acción Animación**: en la pista de acciones del actor, con estas opciones:
+
+| Opción | Descripción |
+| :--- | :--- |
+| **Animación** | Nombre de la animación (aparece en las sugerencias). |
+| **Velocidad** | `1` es la velocidad original; `2` el doble; `0.5` la mitad. |
+| **Bucle** | `MODEL` usa el modo guardado en Blockbench. `LOOP` repite, `ONCE` la reproduce una vez y vuelve a la pose normal, `HOLD` se queda en el último fotograma. |
+| **Modo** | `REPLACE` sustituye a las animaciones automáticas mientras dura. `ADD` se suma encima (por ejemplo, saludar mientras camina). |
+| **Fade in / Fade out** | Segundos para mezclar la entrada y la salida con la pose anterior. |
+
+El botón **⇔ Ajustar a la duración de la animación** pone al clip la duración exacta de la animación según su velocidad (por ejemplo, una animación de 2 s a velocidad `2` deja el clip en 1 s).
+
+Se admiten las interpolaciones **lineal**, **suave (Catmull-Rom)** y **escalón**; la **Bézier** se trata como lineal. Los valores pueden ser expresiones **Molang** sencillas (ej. `math.sin(query.anim_time * 360) * 10`).
+
+<Aside type="tip">
+Las animaciones dependen del tiempo de la escena, así que en el editor se ven exactamente igual cada vez que mueves el cabezal.
+</Aside>

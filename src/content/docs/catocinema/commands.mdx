@@ -1,0 +1,68 @@
+---
+title: Comandos y Permisos
+description: Lista completa de comandos de CatoCinema y sus permisos.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Todos los comandos empiezan por `/cinema` (también funciona el alias `/catocinema`).
+
+## Permisos
+
+| Plataforma | Permiso |
+| :--- | :--- |
+| **Mod** | Nivel de operador 2 (gamemaster). |
+| **Plugin** | `catocinema.admin` (por defecto solo OP). |
+
+---
+
+## Escenas
+
+| Comando | ¿Qué hace? |
+| :--- | :--- |
+| `/cinema play <escena> [jugadores]` | Reproduce la escena para los jugadores indicados. Si no indicas jugadores, la ves tú. |
+| `/cinema stop [jugadores]` | Detiene la cinemática de esos jugadores (o la tuya). |
+| `/cinema stopall` | Detiene todas las cinemáticas en curso. |
+| `/cinema edit <escena>` | Abre el editor con esa escena. Si no existe, se crea una nueva al guardar. |
+| `/cinema list` | Muestra todas las escenas guardadas. |
+| `/cinema copy <origen> <destino>` | Duplica una escena con otro nombre. |
+| `/cinema delete <escena>` | Borra una escena. |
+| `/cinema assets` | Lista los audios e imágenes de la carpeta de assets y su tamaño. |
+
+### Ejemplos
+
+```bash
+/cinema edit intro
+/cinema play intro @a
+/cinema play intro Steve Alex
+/cinema stop @a
+/cinema copy intro intro_v2
+```
+
+<Aside>
+Los nombres de escena usan minúsculas, números, `_` y `-`. Si escribes mayúsculas o espacios se normalizan automáticamente.
+</Aside>
+
+---
+
+## Disparadores
+
+Los comandos de disparadores están explicados en detalle en [Disparadores](/catocinema/triggers/).
+
+| Comando | ¿Qué hace? |
+| :--- | :--- |
+| `/cinema trigger pos1` / `pos2` | Marca las dos esquinas de una zona en tu posición actual. |
+| `/cinema trigger region <id> <escena>` | Crea un disparador de zona con las esquinas marcadas. |
+| `/cinema trigger join <id> <escena>` | Reproduce la escena cuando un jugador se conecta. |
+| `/cinema trigger advancement <id> <escena> <logro>` | Reproduce la escena al conseguir un logro. |
+| `/cinema trigger once <id> <true/false>` | Si es `true`, cada jugador solo lo ve una vez. |
+| `/cinema trigger enable <id> <true/false>` | Activa o desactiva un disparador. |
+| `/cinema trigger reset <id>` | Olvida qué jugadores ya lo vieron. |
+| `/cinema trigger remove <id>` | Borra el disparador. |
+| `/cinema trigger list` | Lista todos los disparadores. |
+
+---
+
+## Saltar una Cinemática
+
+Si la escena tiene activado **Se puede saltar**, los espectadores pueden pulsar **ESC** para saltarla. Cómo se resuelve depende del [modo de salto](/catocinema/scenes/#saltar-la-cinemática) de la escena.

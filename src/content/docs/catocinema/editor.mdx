@@ -1,0 +1,124 @@
+---
+title: El Editor
+description: Cómo usar el editor de cinemáticas de CatoCinema, sus paneles, controles y atajos.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+El editor se abre con `/cinema edit <escena>`. Mientras estás en él, tu cámara se convierte en una **cámara libre** y ves en tiempo real cómo queda la cinemática.
+
+<Aside type="tip">
+Pulsa **H** dentro del editor para ver todos los atajos en pantalla.
+</Aside>
+
+---
+
+## Partes de la Pantalla
+
+| Zona | ¿Para qué sirve? |
+| :--- | :--- |
+| **Barra superior** | Guardar, Probar, Ajustes de escena, Añadir actor, Añadir clip, cambiar entre vista libre y vista de cámara, Abrir otra escena, Ayuda y Salir. |
+| **Visor (viewport)** | El mundo con los gizmos: ruta de la cámara, keyframes, actores, posiciones de efectos y flechas para mover lo seleccionado. |
+| **Inspector (derecha)** | Las propiedades de lo que tengas seleccionado. Si no hay nada seleccionado, muestra los ajustes de la escena. |
+| **Timeline (abajo)** | Las pistas de la escena en el tiempo: Cámara, Planos, cada Actor y sus Acciones, Mundo, Audio, Subtítulos y VFX. |
+
+---
+
+## Moverse por el Mundo
+
+| Control | Acción |
+| :--- | :--- |
+| **Clic derecho + WASD** | Volar con la cámara libre. **E/Espacio** sube, **Q/Ctrl** baja. |
+| **Shift** (mientras vuelas) | Ir más rápido. |
+| **Rueda** (mientras vuelas) | Cambiar la velocidad de vuelo. |
+| **Rueda en el visor** | Cambiar el FOV de la cámara libre. **R** lo reinicia. |
+| **C** | Ver a través de la cámara de la escena / volver a la cámara libre. |
+| **P** | Llevar tu jugador a la posición de la cámara (útil para cargar chunks). |
+| **Tab** | Ocultar o mostrar los paneles. |
+
+En la esquina inferior izquierda siempre ves la **posición, yaw, pitch y FOV** actuales de la cámara libre.
+
+---
+
+## Reproducir y Navegar en el Tiempo
+
+| Control | Acción |
+| :--- | :--- |
+| **Espacio** | Reproducir / pausar. |
+| **Clic en la regla o en una pista vacía** | Mover el cabezal a ese momento. |
+| **Flechas ← →** | Mover el cabezal (con **Shift**, de 1 en 1 segundo). |
+| **Flechas ↑ ↓** | Saltar al keyframe anterior / siguiente. |
+| **Inicio / Fin** | Ir al principio / al final. |
+| **Ctrl+T** | Probar: guarda y reproduce la escena de verdad desde el cabezal; al terminar vuelves al editor. |
+
+---
+
+## Seleccionar y Editar
+
+| Control | Acción |
+| :--- | :--- |
+| **Clic** | Seleccionar en el visor o en la timeline. |
+| **Doble clic / E / Enter** | Editar lo seleccionado en el inspector. |
+| **Ctrl/Shift + clic** | Añadir o quitar de la selección. |
+| **Ctrl/Shift + arrastrar en vacío** | Seleccionar con un recuadro en la timeline. |
+| **Ctrl+A** | Seleccionar todo. |
+| **O** | Quitar la selección (muestra los ajustes de la escena). |
+| **Supr / X** | Borrar lo seleccionado. |
+| **Ctrl+D** | Duplicar en el cabezal. |
+| **Ctrl+C / Ctrl+V** | Copiar y pegar clips y keyframes en el cabezal. Funciona también **entre escenas distintas**. |
+| **Ctrl+Z / Ctrl+Y** | Deshacer / rehacer. |
+| **G** | Mover lo seleccionado a la posición de la cámara libre. |
+| **F** | Ir con la cámara a lo seleccionado. |
+
+### En el Visor
+
+* **Arrastrar las flechas de colores**: mueve lo seleccionado en un eje (rojo X, verde Y, azul Z).
+* **Arrastrar el punto central**: mueve lo seleccionado sobre la pantalla.
+* **Anillo del keyframe**: arrástralo para girar la dirección del keyframe (con **Shift** gira en pasos de 15°).
+* Con varios elementos seleccionados, **todos se mueven y giran a la vez**.
+
+### En la Timeline
+
+* **Arrastrar keyframes o clips** para moverlos en el tiempo. Con varios seleccionados se mueven en grupo.
+* **Arrastrar el borde derecho de un clip** para cambiar su duración (también en grupo).
+* Los movimientos se ajustan a pasos de 0.05 s; mantén **Alt** para moverlos libremente.
+* **Clic derecho en una pista**: menú para añadir en ese momento. **A** abre el menú de añadir y **N** crea un actor.
+* **Rueda**: desplaza las pistas. **Shift + rueda**: desplaza el tiempo. **Ctrl + rueda** o **rueda sobre la regla**: zoom. **Z**: encuadrar toda la escena.
+* Las barras de desplazamiento se pueden arrastrar. La timeline empieza en 0 y no se desplaza más allá de la duración de la escena.
+* Un clip puede empezar en cualquier momento de la escena aunque su final sobresalga: no se recorta ni se empuja para que quepa.
+* Los elementos que quedan **más allá de la duración de la escena** se marcan con un contorno rojo. No se borran, pero tampoco se reproducen; vuelven a funcionar si amplías la duración. Para verlos, aleja el zoom con **Ctrl + rueda** hasta que la escena entera quepa en pantalla.
+
+### En el Inspector
+
+* Arrastra los números para cambiarlos (**Shift** más fino, **Ctrl** x10).
+* Haz clic en un número para escribirlo. Acepta operaciones como `+=5`, `-=2`, `*=2` o `/=2`.
+* **Tab** pasa al siguiente campo.
+
+---
+
+## Keyframes
+
+* **I**: inserta un keyframe de cámara con la posición y rotación de tu cámara libre en el cabezal. Si tienes un actor seleccionado, lo inserta en ese actor.
+* **Shift+I**: inserta un keyframe de actor en la posición de **tu jugador**.
+* Si ya existe un keyframe en ese momento, se actualiza en vez de crear otro.
+
+---
+
+## Grabación de Movimiento
+
+Puedes grabar el movimiento real de tu jugador y convertirlo en keyframes:
+
+1. Selecciona un actor (o nada, para grabar la **cámara**).
+2. Pulsa **Ctrl+R** (o el botón **Grabar** del inspector).
+3. Tras una cuenta atrás de 3 segundos, muévete con tu jugador. La escena se reproduce mientras grabas.
+4. Pulsa **R** para terminar.
+
+El movimiento se simplifica automáticamente a pocos keyframes suaves y **reemplaza** los keyframes que hubiera en ese tramo. Si la grabación supera la duración de la escena, la duración se amplía.
+
+---
+
+## Guardar y Salir
+
+* **Ctrl+S** o el botón **Guardar** guarda la escena en el servidor. Un `*` junto al nombre indica cambios sin guardar.
+* Al **salir** o **abrir otra escena** con cambios sin guardar, el editor te pregunta qué hacer.
+* **Guardar y salir** espera a que el servidor confirme el guardado; si falla, te quedas en el editor y ves el error.

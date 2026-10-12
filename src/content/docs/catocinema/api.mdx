@@ -1,0 +1,118 @@
+---
+title: API para Desarrolladores
+description: Controla CatoCinema desde tu propio mod o plugin y escucha sus eventos.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+CatoCinema incluye una API Java para reproducir escenas desde otros mods o plugins y reaccionar a lo que ocurre en ellas. Funciona igual en el mod y en el plugin.
+
+La clase principal es `me.katto.catocinema.api.CatoCinemaApi`.
+
+---
+
+## Métodos
+
+| Método | Descripción |
+| :--- | :--- |
+| `available()` | `true` si CatoCinema está cargado y el servidor en marcha. |
+| `scenes()` | Lista de nombres de escenas guardadas. |
+| `exists(String scene)` | Si existe una escena con ese nombre. |
+| `play(String scene, Collection<UUID> viewers)` | Reproduce una escena guardada. Devuelve la `Session` o `null`. |
+| `play(Scene scene, Collection<UUID> viewers)` | Reproduce una escena creada por código. |
+| `stop(UUID viewer)` | Detiene la cinemática de un jugador. |
+| `sessionOf(UUID viewer)` | La sesión que está viendo un jugador, o `null`. |
+| `isWatching(UUID viewer)` | Si el jugador está viendo una cinemática. |
+| `sessions()` | Todas las sesiones activas. |
+| `register(CinemaListener)` / `unregister(...)` | Registra o quita un escuchador de eventos. |
+
+### Ejemplo
+
+```java
+import me.katto.catocinema.api.CatoCinemaApi;
+
+if (CatoCinemaApi.available() && CatoCinemaApi.exists("intro")) {
+    CatoCinemaApi.play("intro", List.of(player.getUUID()));
+}
+```
+
+---
+
+## Eventos (`CinemaListener`)
+
+Implementa solo los métodos que necesites:
+
+```java
+import me.katto.catocinema.api.CatoCinemaApi;
+import me.katto.catocinema.api.CinemaListener;
+import me.katto.catocinema.api.EndReason;
+
+CatoCinemaApi.register(new CinemaListener() {
+    @Override
+    public void onStart(Session session) {
+    }
+
+    @Override
+    public void onEnd(Session session, EndReason reason) {
+        if (reason == EndReason.FINISHED) {
+        }
+    }
+
+    @Override
+    public void onEvent(Session session, String name, String data) {
+        if (name.equals("abrir_puerta")) {
+        }
+    }
+
+    @Override
+    public void onSkipVote(Session session, UUID voter, int votes, int needed) {
+    }
+});
+```
+
+| Evento | Cuándo ocurre |
+| :--- | :--- |
+| `onStart` | Empieza una sesión. |
+| `onEnd` | Termina una sesión, con el motivo. |
+| `onEvent` | El cabezal pasa por un clip **Evento (API)** de la escena; recibe su nombre y datos. |
+| `onSkipVote` | Un espectador vota para saltar (modo de salto `VOTE`). |
+
+### Motivos de Fin (`EndReason`)
+
+| Motivo | Significado |
+| :--- | :--- |
+| `FINISHED` | Llegó al final. |
+| `CHAINED` | Terminó y empezó la siguiente escena encadenada. |
+| `SKIPPED` | Se saltó con ESC. |
+| `STOPPED` | Se detuvo con un comando o por la API. |
+| `QUIT` | El espectador se desconectó. |
+| `ERROR` | Ocurrió un error. |
+
+### La Sesión (`Session`)
+
+Desde una `Session` puedes consultar `id()`, `scene()`, `time()` (segundos transcurridos) y `viewers()` (UUIDs de los espectadores).
+
+---
+
+## Eventos de Bukkit (Plugin)
+
+En el plugin, los mismos eventos se lanzan también como eventos de Bukkit en el paquete `me.katto.catocinema.spigot.event`:
+
+| Evento | Métodos |
+| :--- | :--- |
+| `CinemaStartEvent` | `session()`, `scene()` |
+| `CinemaEndEvent` | `session()`, `reason()`, `scene()` |
+| `CinemaClipEvent` | `session()`, `name()`, `data()`, `scene()` |
+| `CinemaSkipVoteEvent` | `session()`, `voter()`, `votes()`, `needed()`, `scene()` |
+
+```java
+@EventHandler
+public void onClip(CinemaClipEvent event) {
+    if (event.name().equals("dar_premio")) {
+    }
+}
+```
+
+<Aside type="tip">
+El clip **Evento (API)** no hace nada por sí solo: sirve para que tu código reaccione en el momento exacto de la cinemática (abrir puertas, dar premios, cambiar de fase…).
+</Aside>

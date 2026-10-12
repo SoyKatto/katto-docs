@@ -1,0 +1,99 @@
+---
+title: Ajustes de Escena y Cámara
+description: Opciones generales de una escena, keyframes de cámara, curvas y encadenado de escenas.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Los ajustes de la escena aparecen en el inspector cuando **no hay nada seleccionado** (botón **Escena** de la barra superior o tecla **O**).
+
+---
+
+## Ajustes Generales
+
+| Opción | Por defecto | ¿Qué hace? |
+| :--- | :--- | :--- |
+| **Duración** | 10 s | Cuánto dura la escena. El botón **⇔ Ajustar duración al contenido** la ajusta al último clip o keyframe. |
+| **Fundido de entrada/salida** | 0.5 s | Fundido a negro al empezar y al terminar. `0` lo desactiva. |
+| **Barras de cine** | 0 | Altura de las barras negras arriba y abajo (de `0` a `0.45`). |
+| **Modo espectador** | `SPECTATOR` | `SPECTATOR` pone a los espectadores en modo espectador y los lleva junto a la cámara durante la escena. `STAY` los deja en su modo de juego y donde están. |
+| **Ocultar otros jugadores** | Sí | Oculta a los demás jugadores (y a ti mismo) mientras se ve la escena. Los jugadores que son actores siguen visibles. |
+| **Espectadores invulnerables** | Sí | Los espectadores no reciben daño, se les apaga el fuego y recuperan el aire. |
+| **Actores invulnerables** | Sí | Los actores reales (jugadores y entidades) no reciben daño durante la escena. |
+| **Devolver espectadores al final** | Sí | Al terminar, cada espectador vuelve a donde estaba antes de empezar. |
+| **Se puede saltar (ESC)** | No | Permite saltar la cinemática con ESC. |
+| **Modo de salto** | `INDIVIDUAL` | Cómo funciona el salto con varios espectadores (ver abajo). |
+| **Siguiente escena** | — | Escena que se reproduce automáticamente al terminar esta. |
+| **Detener música vanilla** | Sí | Corta la música de fondo de Minecraft durante la escena. |
+
+Al terminar, cada espectador recupera su **modo de juego** y su **invulnerabilidad** originales.
+
+### Seguridad de los Espectadores
+
+* El estado original de cada espectador (modo de juego, posición, dimensión, vuelo, invulnerabilidad y montura) se guarda en `pending_restore.json`. Si se desconecta durante la escena, o el servidor se cierra o se cae, se le restaura al volver a entrar.
+* Si el espectador iba montado (caballo, barco…), al volver a su posición se le monta de nuevo.
+* Con **Devolver espectadores al final** desactivado, el espectador se queda donde estaba la cámara, pero se le baja al suelo (o se le saca de los bloques) para que no caiga ni se asfixie.
+* Si un espectador muere durante la escena (por ejemplo con `STAY` y sin invulnerabilidad), su cinemática termina y ve la pantalla de muerte normal.
+* Con varios espectadores, todos ven la escena en la dimensión del primero, aunque estuvieran en otra.
+* Las entidades creadas con `SPAWN` se eliminan solas si quedan en el mundo tras un cierre inesperado del servidor.
+* Los bloques cambiados por clips **Bloque** y **Rellenar** con **Restaurar al final** se apuntan en `pending_blocks.json`. También se guarda el contenido de cofres, barriles, hornos, etc. Si el servidor se cae en mitad de la escena, se restauran al volver a arrancar. Los cofres y demás contenedores recuperan su contenido, y al romperlos durante la escena no sueltan los objetos al suelo.
+
+### Precarga del Mundo
+
+Con el modo `SPECTATOR`, antes de empezar la escena cada espectador se coloca en la posición inicial de la cámara y ve una pantalla negra con **"Cargando escena…"** hasta que los chunks de alrededor están cargados. Así la cinemática no empieza con el mundo a medio cargar aunque el espectador estuviera lejos.
+
+* La escena empieza cuando **todos** los espectadores están listos, o como mucho a los **10 segundos**.
+* El tiempo de la escena no avanza mientras carga, así que no se pierde nada del principio.
+* Con `STAY` no hay precarga: el espectador no se mueve, así que solo se ve lo que tenga cargado alrededor.
+
+### Saltar la Cinemática
+
+| Modo | Comportamiento |
+| :--- | :--- |
+| `INDIVIDUAL` | Quien pulsa ESC sale solo él; los demás siguen viéndola. |
+| `VOTE` | Se vota: cuando más de la mitad de los espectadores pulsa ESC, termina para todos. Se muestra el recuento en pantalla. |
+| `ANYONE` | Cualquier espectador que pulse ESC la termina para todos. |
+
+Si solo hay un espectador, ESC siempre la termina.
+
+### Encadenar Escenas
+
+Con **Siguiente escena** puedes crear secuencias: al acabar de forma normal, empieza la siguiente con los mismos espectadores y sin perder su estado original (al final de toda la cadena vuelven a donde estaban). Si la escena se salta o se detiene, la cadena no continúa.
+
+<Aside type="caution">
+Para evitar bucles infinitos, una cadena se corta como máximo tras 32 escenas.
+</Aside>
+
+---
+
+## Keyframes de Cámara
+
+La pista **Cámara** define el recorrido principal. Cada keyframe guarda:
+
+| Propiedad | Descripción |
+| :--- | :--- |
+| **Tiempo** | Momento del keyframe. Dos keyframes de la misma pista no pueden coincidir en el tiempo. |
+| **Posición** | X, Y, Z. Los botones **⌖** y **☺** la toman de la cámara libre o de tu jugador. |
+| **Yaw / Pitch / Roll** | Dirección, inclinación vertical e inclinación lateral (roll, para planos "holandeses"). |
+| **FOV** | Campo de visión (zoom). |
+| **Curva** | Cómo se acelera el movimiento hasta el siguiente keyframe. |
+| **Curva suave (spline)** | Hace que la ruta pase por los keyframes con una curva suave en vez de en línea recta. |
+| **Relativo a actor** | La posición pasa a ser relativa a un actor: la cámara lo acompaña aunque se mueva. |
+
+### Curvas Disponibles
+
+`CONSTANT` (salto sin transición), `LINEAR`, `SINE_IN/OUT/IN_OUT`, `QUAD_IN/OUT/IN_OUT`, `CUBIC_IN/OUT/IN_OUT`, `EXPO_IN/OUT/IN_OUT`, `BACK_IN/OUT/IN_OUT`, `ELASTIC_OUT` y `BOUNCE_OUT`.
+
+* **IN**: empieza lento y acelera.
+* **OUT**: empieza rápido y frena.
+* **IN_OUT**: suave al empezar y al terminar.
+
+<Aside type="tip">
+En el visor, la ruta de la cámara se dibuja con marcas de cada segundo, y las partes que quedan detrás de bloques se ven discontinuas.
+</Aside>
+
+---
+
+## Planos (Pista "Planos")
+
+Los clips de la pista **Planos** tienen prioridad sobre los keyframes mientras están activos: órbitas, seguir a un actor, POV, mirar a un punto, temblor y zoom. Con el parámetro **Blend** la cámara entra y sale del plano suavemente. Están detallados en la [Referencia de Clips](/catocinema/clips/#planos).
