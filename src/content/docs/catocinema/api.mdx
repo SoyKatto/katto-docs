@@ -19,6 +19,7 @@ La clase principal es `me.katto.catocinema.api.CatoCinemaApi`.
 | `scenes()` | Lista de nombres de escenas guardadas. |
 | `exists(String scene)` | Si existe una escena con ese nombre. |
 | `play(String scene, Collection<UUID> viewers)` | Reproduce una escena guardada. Devuelve la `Session` o `null`. |
+| `play(String scene, Collection<UUID> viewers, Map<String, String> skins)` | Igual, cambiando la skin de actores (actor → nombre de jugador), como en el comando. |
 | `play(Scene scene, Collection<UUID> viewers)` | Reproduce una escena creada por código. |
 | `stop(UUID viewer)` | Detiene la cinemática de un jugador. |
 | `sessionOf(UUID viewer)` | La sesión que está viendo un jugador, o `null`. |

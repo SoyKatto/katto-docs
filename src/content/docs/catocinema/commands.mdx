@@ -12,7 +12,7 @@ Todos los comandos empiezan por `/cinema` (también funciona el alias `/catocine
 | Plataforma | Permiso |
 | :--- | :--- |
 | **Mod** | Nivel de operador 2 (gamemaster). |
-| **Plugin** | `catocinema.admin` (por defecto solo OP). |
+| **Plugin** | Ser OP. |
 
 ---
 
@@ -20,7 +20,7 @@ Todos los comandos empiezan por `/cinema` (también funciona el alias `/catocine
 
 | Comando | ¿Qué hace? |
 | :--- | :--- |
-| `/cinema play <escena> [jugadores]` | Reproduce la escena para los jugadores indicados. Si no indicas jugadores, la ves tú. |
+| `/cinema play <escena> [jugadores] [actor skin ...]` | Reproduce la escena para los jugadores indicados. Si no indicas jugadores, la ves tú. Opcionalmente cambia la skin de actores para esta reproducción (ver abajo). |
 | `/cinema stop [jugadores]` | Detiene la cinemática de esos jugadores (o la tuya). |
 | `/cinema stopall` | Detiene todas las cinemáticas en curso. |
 | `/cinema edit <escena>` | Abre el editor con esa escena. Si no existe, se crea una nueva al guardar. |
@@ -34,10 +34,26 @@ Todos los comandos empiezan por `/cinema` (también funciona el alias `/catocine
 ```bash
 /cinema edit intro
 /cinema play intro @a
-/cinema play intro Steve Alex
+/cinema play intro Steve
+/cinema play intro @a actor1 SoyKatto actor2 Notch
 /cinema stop @a
 /cinema copy intro intro_v2
 ```
+
+### Skins de los Actores al Reproducir
+
+Después de los jugadores puedes indicar pares **actor skin** para usar la escena como plantilla con distintas skins, sin editarla:
+
+```bash
+/cinema play intro @a actor1 SoyKatto actor2 Notch
+/cinema play intro @p guardia=Steve
+```
+
+* El actor se indica por su **ID** o por su **nombre** del editor (sin distinguir mayúsculas).
+* En los actores `NPC`, la skin sustituye a la de la escena (y si no tienen "Nombre visible", también el nombre que llevan encima).
+* En jugadores reales, la skin se aplica desde el inicio de la escena, como una acción **Skin** en el segundo 0. Las acciones Skin que ya tenga la escena siguen funcionando después.
+* No afecta a los actores `MODEL` ni a los mobs.
+* También se aplica a las escenas encadenadas. Si algún actor no existe, se avisa en el chat.
 
 <Aside>
 Los nombres de escena usan minúsculas, números, `_` y `-`. Si escribes mayúsculas o espacios se normalizan automáticamente.

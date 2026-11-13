@@ -16,7 +16,7 @@ Los ajustes de la escena aparecen en el inspector cuando **no hay nada seleccion
 | **Duración** | 10 s | Cuánto dura la escena. El botón **⇔ Ajustar duración al contenido** la ajusta al último clip o keyframe. |
 | **Fundido de entrada/salida** | 0.5 s | Fundido a negro al empezar y al terminar. `0` lo desactiva. |
 | **Barras de cine** | 0 | Altura de las barras negras arriba y abajo (de `0` a `0.45`). |
-| **Modo espectador** | `SPECTATOR` | `SPECTATOR` pone a los espectadores en modo espectador y los lleva junto a la cámara durante la escena. `STAY` los deja en su modo de juego y donde están. |
+| **Modo espectador** | `SPECTATOR` | `SPECTATOR` pone a los espectadores en modo espectador y los lleva junto a la cámara durante la escena. `STAY` los deja en su modo de juego y donde están, siempre que la cámara empiece cerca de ellos (ver [Precarga del Mundo](#precarga-del-mundo)). |
 | **Ocultar otros jugadores** | Sí | Oculta a los demás jugadores (y a ti mismo) mientras se ve la escena. Los jugadores que son actores siguen visibles. |
 | **Espectadores invulnerables** | Sí | Los espectadores no reciben daño, se les apaga el fuego y recuperan el aire. |
 | **Actores invulnerables** | Sí | Los actores reales (jugadores y entidades) no reciben daño durante la escena. |
@@ -31,20 +31,26 @@ Al terminar, cada espectador recupera su **modo de juego** y su **invulnerabilid
 ### Seguridad de los Espectadores
 
 * El estado original de cada espectador (modo de juego, posición, dimensión, vuelo, invulnerabilidad y montura) se guarda en `pending_restore.json`. Si se desconecta durante la escena, o el servidor se cierra o se cae, se le restaura al volver a entrar.
-* Si el espectador iba montado (caballo, barco…), al volver a su posición se le monta de nuevo.
+* En los últimos 5 segundos de la escena se precarga en segundo plano la zona a la que volverá cada espectador, para que al regresar el mundo ya esté ahí.
+* Si el espectador iba montado (caballo, barco…), al volver a su posición se le monta de nuevo. Si la montura aún no ha cargado, se reintenta durante 10 segundos.
 * Con **Devolver espectadores al final** desactivado, el espectador se queda donde estaba la cámara, pero se le baja al suelo (o se le saca de los bloques) para que no caiga ni se asfixie.
 * Si un espectador muere durante la escena (por ejemplo con `STAY` y sin invulnerabilidad), su cinemática termina y ve la pantalla de muerte normal.
 * Con varios espectadores, todos ven la escena en la dimensión del primero, aunque estuvieran en otra.
+* Solo pueden ver cinemáticas los jugadores que tienen el mod en su cliente. Si se intenta reproducir una escena a alguien sin el mod (por ejemplo, con un disparador), no se le incluye y recibe un aviso; los demás espectadores la ven con normalidad.
+* Al empezar se cierra cualquier cofre o contenedor que el espectador tuviera abierto, para que no se pierda ni se desincronice el objeto que llevaba en el cursor.
+* Mientras ve la cinemática, el espectador cuenta como activo, así que no le expulsa el tiempo de inactividad del servidor (`player-idle-timeout`). Los plugins de AFK con su propio sistema pueden seguir marcándolo.
 * Las entidades creadas con `SPAWN` se eliminan solas si quedan en el mundo tras un cierre inesperado del servidor.
 * Los bloques cambiados por clips **Bloque** y **Rellenar** con **Restaurar al final** se apuntan en `pending_blocks.json`. También se guarda el contenido de cofres, barriles, hornos, etc. Si el servidor se cae en mitad de la escena, se restauran al volver a arrancar. Los cofres y demás contenedores recuperan su contenido, y al romperlos durante la escena no sueltan los objetos al suelo.
 
 ### Precarga del Mundo
 
-Con el modo `SPECTATOR`, antes de empezar la escena cada espectador se coloca en la posición inicial de la cámara y ve una pantalla negra con **"Cargando escena…"** hasta que los chunks de alrededor están cargados. Así la cinemática no empieza con el mundo a medio cargar aunque el espectador estuviera lejos.
+Con el modo `SPECTATOR`, la zona donde empieza la cámara se carga **en segundo plano antes de empezar**: mientras tanto el espectador sigue jugando con normalidad, sin ninguna pantalla de carga. Cuando la zona está lista, se le lleva a la cinemática.
 
-* La escena empieza cuando **todos** los espectadores están listos, o como mucho a los **10 segundos**.
-* El tiempo de la escena no avanza mientras carga, así que no se pierde nada del principio.
-* Con `STAY` no hay precarga: el espectador no se mueve, así que solo se ve lo que tenga cargado alrededor.
+* El servidor mantiene cargados temporalmente los chunks alrededor de la posición inicial de la cámara y los suelta en cuanto empieza la escena. Si el servidor se cae durante la carga, se liberan solos al volver a arrancar (`pending_chunks.json`).
+* Si la zona ya estaba cargada, la escena empieza al instante. Si tarda demasiado (por ejemplo, un terreno sin generar), empieza igualmente a los **15 segundos**.
+* Al llegar, el espectador ve unas décimas de segundo en negro mientras su cliente termina de recibir el terreno, como un fundido de entrada.
+* El tiempo de la escena no empieza a contar hasta que todos están listos, así que no se pierde nada del principio.
+* Con `STAY`, si la cámara empieza **cerca** del espectador (dentro de la distancia de visión del servidor), no se le mueve ni cambia su modo de juego. Si empieza **lejos** o en otra dimensión, se comporta como `SPECTATOR` (precarga, espectador y viaje a la cámara) y al terminar se le devuelve siempre a donde estaba con su modo de juego.
 
 ### Saltar la Cinemática
 

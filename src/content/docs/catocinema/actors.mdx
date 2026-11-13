@@ -40,6 +40,7 @@ Créalo con **Añadir actor** (o la tecla **N**) y configúralo en el inspector.
 
 * Mientras un jugador sigue keyframes, se le pone a **volar** y, si estaba en supervivencia, en **modo aventura**, para que no caiga ni rompa bloques. Al terminar recupera su modo de juego y su vuelo.
 * Si se desconecta en mitad de la escena, al volver a entrar se le devuelve a su estado y posición originales.
+* Si el actor es el propio espectador (`@viewer` o su nombre) y la cámara se aleja de su recorrido más allá de su distancia de visión, ese espectador ve la escena como un espectador normal y el actor se muestra como un **NPC con su skin**, para que el mundo alrededor de la cámara se vea bien. Ese NPC no lleva su equipo ni recibe las acciones del servidor (Brillar, Invisible, Daño).
 * Si el mismo jugador o entidad ya está siendo usado por otra escena en curso, esta escena no lo mueve ni lo modifica (solo lo muestra) hasta que la otra termine.
 
 <Aside>
@@ -72,7 +73,7 @@ Debajo de cada actor hay una pista de **Acciones**. Clic derecho en ella para a�
 | **Brillar** (`GLOW`) | Contorno brillante. | — |
 | **Invisible** (`INVISIBLE`) | El actor se vuelve invisible. | — |
 | **Daño** (`HURT`) | Animación de recibir daño (sin hacer daño real). | — |
-| **Pose** (`POSE`) | Fuerza una pose. | De pie, agachado, dormido, nadando, planeando con élitros, ataque giratorio, sentado, rugiendo, muriendo. |
+| **Pose** (`POSE`) | Fuerza una pose. | De pie, agachado, dormido, nadando, planeando con élitros, sentado, **ataque giratorio** (gira como con un tridente con Propulsión), **rugiendo** (solo el Warden) y **muriendo** (cae de lado en rojo, como al morir, sin morir de verdad). |
 | **Mirar** (`LOOK`) | Gira la cabeza para mirar a otro actor o a la cámara. | Objetivo (`@camera` o un actor). |
 | **Equipar** (`EQUIP`) | Le pone un objeto en una ranura. | Ranura (manos, cabeza, pecho, piernas, pies) e ID del objeto. |
 | **Armadura** (`OUTFIT`) | Viste una armadura completa. | Cuero, malla, hierro, oro, diamante, netherita o ninguna. |
